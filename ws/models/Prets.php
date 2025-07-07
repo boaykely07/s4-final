@@ -33,4 +33,18 @@ class Prets {
         $stmt = $db->prepare("DELETE FROM Prets WHERE id_prets = ?");
         $stmt->execute([$id]);
     }
+
+    public static function getInteretsPrets() {
+        $db = getDB();
+        $sql = "
+            SELECT p.id_prets, c.nom_clients, c.prenom_clients, t.nom_type_pret, p.montant_prets, tx.pourcentage, p.duree_en_mois,
+                   (p.montant_prets * tx.pourcentage * p.duree_en_mois / 12 / 100) AS interet_total
+            FROM Prets p
+            JOIN Clients c ON p.id_clients = c.id_clients
+            JOIN Types_pret t ON p.id_types_pret = t.id_types_pret
+            JOIN Taux tx ON p.id_types_pret = tx.id_types_pret
+        ";
+        $stmt = $db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 } 
