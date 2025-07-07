@@ -5,6 +5,7 @@ require_once __DIR__ . '/../models/Fonds.php';
 require_once __DIR__ . '/../models/DetailsFonds.php';
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers/Utils.php';
+require_once __DIR__ . '/EcheancesController.php';
 
 class PretsController {
     public static function getAll() {
@@ -52,8 +53,9 @@ class PretsController {
             'id_prets' => $pret_id
         ]);
 
-        // 6. Générer les échéances automatiquement (exemple d'appel)
-        // EcheancesController::generateForPret($pret_id); // à implémenter si besoin
+        // 6. Générer les échéances automatiquement
+        
+        EcheancesController::generateForPret($pret_id);
 
         Flight::json(['message' => 'Prêt ajouté', 'id' => $pret_id]);
     }
