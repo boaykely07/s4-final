@@ -36,6 +36,17 @@
                 <input type="number" class="w-full border border-gray-300 rounded px-3 py-2" id="duree_en_mois"
                     name="duree_en_mois" required>
             </div>
+            <div>
+                <label for="pourcentage_assurance" class="block mb-1 font-medium">Pourcentage assurance (%)</label>
+                <input type="number" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2"
+                    id="pourcentage_assurance" name="pourcentage_assurance">
+            </div>
+            <div>
+                <label for="delai_premier_remboursement" class="block mb-1 font-medium">Délai avant 1er remboursement
+                    (mois)</label>
+                <input type="number" class="w-full border border-gray-300 rounded px-3 py-2"
+                    id="delai_premier_remboursement" name="delai_premier_remboursement">
+            </div>
             <div class="flex gap-2">
                 <button type="submit"
                     class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded transition">Ajouter</button>
@@ -79,7 +90,9 @@
                 id_clients: document.getElementById('id_clients').value,
                 montant_prets: document.getElementById('montant_prets').value,
                 date_debut: document.getElementById('date_debut').value,
-                duree_en_mois: document.getElementById('duree_en_mois').value
+                duree_en_mois: document.getElementById('duree_en_mois').value,
+                pourcentage_assurance: document.getElementById('pourcentage_assurance').value || null,
+                delai_premier_remboursement: document.getElementById('delai_premier_remboursement').value || null
             };
             fetch(`${API_BASE}/prets`, {
                 method: 'POST',
