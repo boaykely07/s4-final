@@ -44,13 +44,7 @@ class PretsController {
         $row = $stmt->fetch();
         $id_type_transactions = $row ? $row['id_type_transactions'] : 2;
 
-        // 5. Afficher les données dans la console avant insertion dans Details_fonds
-        error_log('Insertion DetailsFonds : ' . json_encode([
-            'id_fonds' => $id_fonds,
-            'id_type_transactions' => $id_type_transactions,
-            'date_details' => date('Y-m-d'),
-            'id_prets' => $pret_id
-        ]));
+        // 5. Insertion dans Details_fonds
         DetailsFonds::create((object)[
             'id_fonds' => $id_fonds,
             'id_type_transactions' => $id_type_transactions,
@@ -58,7 +52,10 @@ class PretsController {
             'id_prets' => $pret_id
         ]);
 
-        Flight::json(['message' => 'Prêt ajouté et approuvé, fonds et mouvement créés', 'id' => $pret_id]);
+        // 6. Générer les échéances automatiquement (exemple d'appel)
+        // EcheancesController::generateForPret($pret_id); // à implémenter si besoin
+
+        Flight::json(['message' => 'Prêt ajouté', 'id' => $pret_id]);
     }
 
     public static function update($id) {

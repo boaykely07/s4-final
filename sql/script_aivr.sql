@@ -91,3 +91,20 @@ CREATE TABLE Details_fonds(
     FOREIGN KEY (id_type_transactions) REFERENCES Type_transactions(id_type_transactions),
     FOREIGN KEY (id_prets) REFERENCES Prets(id_prets)
 );
+
+-- Table pour les échéances de remboursement
+CREATE TABLE Echeances (
+    id_echeance INT AUTO_INCREMENT PRIMARY KEY,
+    id_prets INT NOT NULL,
+    numero_echeance INT NOT NULL, -- Numéro de l'échéance (1, 2, 3, ...)
+    date_echeance DATE NOT NULL, -- Date prévue pour l'échéance
+    montant_capital DECIMAL(15, 2) NOT NULL, -- Partie du capital remboursé
+    montant_interets DECIMAL(15, 2) NOT NULL, -- Intérêts payés pour cette échéance
+    montant_total DECIMAL(15, 2) NOT NULL, -- Montant total de l'échéance (capital + intérêts + assurance si applicable)
+    solde_restant DECIMAL(15, 2) NOT NULL, -- Solde restant après cette échéance
+    FOREIGN KEY (id_prets) REFERENCES Prets(id_prets)
+);
+
+ALTER TABLE Prets
+ADD pourcentage_assurance DECIMAL(5, 2) NULL, -- Pourcentage d'assurance, peut être NULL
+ADD delai_premier_remboursement INT NULL; -- Délai en mois pour le 1er remboursement (S4 INFO uniquement)

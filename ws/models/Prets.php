@@ -17,15 +17,32 @@ class Prets {
 
     public static function create($data) {
         $db = getDB();
-        $stmt = $db->prepare("INSERT INTO Prets (id_types_pret, id_clients, montant_prets, date_debut, duree_en_mois) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$data->id_types_pret, $data->id_clients, $data->montant_prets, $data->date_debut, $data->duree_en_mois]);
+        $stmt = $db->prepare("INSERT INTO Prets (id_types_pret, id_clients, montant_prets, date_debut, duree_en_mois, pourcentage_assurance, delai_premier_remboursement) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $data->id_types_pret,
+            $data->id_clients,
+            $data->montant_prets,
+            $data->date_debut,
+            $data->duree_en_mois,
+            isset($data->pourcentage_assurance) ? $data->pourcentage_assurance : null,
+            isset($data->delai_premier_remboursement) ? $data->delai_premier_remboursement : null
+        ]);
         return $db->lastInsertId();
     }
 
     public static function update($id, $data) {
         $db = getDB();
-        $stmt = $db->prepare("UPDATE Prets SET id_types_pret = ?, id_clients = ?, montant_prets = ?, date_debut = ?, duree_en_mois = ? WHERE id_prets = ?");
-        $stmt->execute([$data->id_types_pret, $data->id_clients, $data->montant_prets, $data->date_debut, $data->duree_en_mois, $id]);
+        $stmt = $db->prepare("UPDATE Prets SET id_types_pret = ?, id_clients = ?, montant_prets = ?, date_debut = ?, duree_en_mois = ?, pourcentage_assurance = ?, delai_premier_remboursement = ? WHERE id_prets = ?");
+        $stmt->execute([
+            $data->id_types_pret,
+            $data->id_clients,
+            $data->montant_prets,
+            $data->date_debut,
+            $data->duree_en_mois,
+            isset($data->pourcentage_assurance) ? $data->pourcentage_assurance : null,
+            isset($data->delai_premier_remboursement) ? $data->delai_premier_remboursement : null,
+            $id
+        ]);
     }
 
     public static function delete($id) {
