@@ -33,4 +33,15 @@ class Fonds {
         $stmt = $db->prepare("DELETE FROM Fonds WHERE id_fonds = ?");
         $stmt->execute([$id]);
     }
+
+    public static function getFondsActuel() {
+        $db = getDB();
+        $stmt = $db->query("
+            SELECT 
+                (SELECT montant_fonds FROM Fonds ORDER BY id_fonds DESC LIMIT 1) - 
+                COALESCE(SUM(montant_prets), 0) as fonds_disponible 
+            FROM Prets
+        ");
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 } 

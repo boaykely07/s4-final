@@ -29,4 +29,9 @@ class FondsController {
         Fonds::delete($id);
         Flight::json(['message' => 'Fonds supprimé']);
     }
+
+    public static function getFondsActuel() {
+        $fonds = Fonds::getFondsActuel();
+        Flight::json($fonds);
+    }
 } 

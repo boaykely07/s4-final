@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des fonds</title>
+</head>
+<body>
+    <div>
+        <h2>Fonds Disponible</h2>
+        <p id="fondsActuel"></p>
+    </div>
+    
+    <script>
+        const apiBase = "http://localhost/s4-final/ws";
+
+        function ajax(method, url, data, callback) {
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, apiBase + url, true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    callback(JSON.parse(xhr.responseText));
+                } else {
+                    alert("Erreur lors de l'ajout du fonds");
+                    console.error(xhr.responseText);
+                }
+            }
+        };
+        xhr.send(data);
+    }
+        function afficherFondsActuel() {
+            ajax("GET", "/fonds/actuel", null, (response) => {
+                const fondsActuel = document.getElementById("fondsActuel");
+                fondsActuel.textContent = `Fonds disponible : ${response.fonds_disponible} €`;
+            });
+        }
+    
+    document.addEventListener('DOMContentLoaded', afficherFondsActuel);
+    </script>
+
+</body>
+</html>
