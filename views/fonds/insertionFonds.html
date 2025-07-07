@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertion des fonds</title>
+</head>
+<body>
+<h1>Insertion des fonds</h1>
+<div>
+    <input type="number" id="montant_fonds" placeholder="Montant">
+    <button onclick="ajouterFonds()">Ajouter</button>
+</div>
+
+<script>
+    const apiBase = "http://localhost/s4-final/ws";
+
+    function ajax(method, url, data, callback) {
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, apiBase + url, true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    callback(JSON.parse(xhr.responseText));
+                } else {
+                    alert("Erreur lors de l'ajout du fonds");
+                    console.error(xhr.responseText);
+                }
+            }
+        };
+        xhr.send(data);
+    }
+
+    function ajouterFonds() {
+        const montant = document.getElementById("montant_fonds").value;
+        if (!montant) {
+            alert("Veuillez saisir un montant");
+            return;
+        }
+        
+        const data = `montant_fonds=${encodeURIComponent(montant)}`;
+        ajax("POST", "/fonds", data, (response) => {
+            document.getElementById("montant_fonds").value = "";
+            alert("Fonds ajouté avec succès");
+            console.log("Réponse serveur:", response);
+        });
+    }
+</script>
+</body>
+</html>
