@@ -13,7 +13,7 @@ class FondsController {
         Flight::json($fonds);
     }
 
-    public static function create() {
+    public static function createOnly() {
         $data = Flight::request()->data;
         $id = Fonds::create($data);
         Flight::json(['message' => 'Fonds ajouté', 'id' => $id]);
@@ -33,5 +33,15 @@ class FondsController {
     public static function getFondsActuel() {
         $fonds = Fonds::getFondsActuel();
         Flight::json($fonds);
+    }
+
+    public static function create() {
+        try {
+            $data = Flight::request()->data;
+            $id = Fonds::create($data);
+            Flight::json(['message' => 'Fonds ajouté avec détails', 'id' => $id]);
+        } catch (Exception $e) {
+            Flight::json(['error' => $e->getMessage()], 500);
+        }
     }
 } 

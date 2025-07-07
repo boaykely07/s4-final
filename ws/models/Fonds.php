@@ -15,7 +15,7 @@ class Fonds {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function create($data) {
+    public static function createOnly($data) {
         $db = getDB();
         $stmt = $db->prepare("INSERT INTO Fonds (montant_fonds) VALUES (?)");
         $stmt->execute([$data->montant_fonds]);
@@ -43,5 +43,27 @@ class Fonds {
             FROM Prets
         ");
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function create($data) {
+        $db = getDB();
+        try {
+            $db->beginTransaction();
+            
+            // Insertion dans Fonds
+            $stmt = $db->prepare("INSERT INTO Fonds (montant_fonds) VALUES (?)");
+            $stmt->execute([$data->montant_fonds]);
+            $id_fonds = $db->lastInsertId();
+            
+            // Insertion dans Details_fonds avec type 'Depot' (id=1)
+            $stmt = $db->prepare("INSERT INTO Details_fonds (id_fonds, id_type_transactions, date_details) VALUES (?, 1, NOW())");
+            $stmt->execute([$id_fonds]);
+            
+            $db->commit();
+            return $id_fonds;
+        } catch (Exception $e) {
+            $db->rollBack();
+            throw $e;
+        }
     }
 } 

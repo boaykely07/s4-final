@@ -34,7 +34,6 @@ INSERT INTO Taux (id_types_pret, pourcentage) VALUES
 (3, 4.10);
 
 -- Details_fonds (liés aux fonds, types de transactions, id_prets NULL pour test simple)
-INSERT INTO Details_fonds (id_fonds, id_type_transactions, montant_transaction, date_details, id_prets) VALUES
-(1, 1, 20000.00, '2024-01-10', NULL),
-(1, 2, 5000.00, '2024-01-15', NULL),
-(2, 3, 15000.00, '2024-02-01', NULL);
+INSERT INTO Details_fonds (id_fonds, id_type_transactions, date_details, id_prets) VALUES
+(1, 1, '2024-01-10', NULL),
+(1, 2, '2024-01-15', NULL);
