@@ -15,7 +15,7 @@ class Fonds {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function create($data) {
+    public static function createOnly($data) {
         $db = getDB();
         $stmt = $db->prepare("INSERT INTO Fonds (montant_fonds) VALUES (?)");
         $stmt->execute([$data->montant_fonds]);
@@ -32,5 +32,38 @@ class Fonds {
         $db = getDB();
         $stmt = $db->prepare("DELETE FROM Fonds WHERE id_fonds = ?");
         $stmt->execute([$id]);
+    }
+
+    public static function getFondsActuel() {
+        $db = getDB();
+        $stmt = $db->query("
+            SELECT 
+                (SELECT montant_fonds FROM Fonds ORDER BY id_fonds DESC LIMIT 1) - 
+                COALESCE(SUM(montant_prets), 0) as fonds_disponible 
+            FROM Prets
+        ");
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function create($data) {
+        $db = getDB();
+        try {
+            $db->beginTransaction();
+            
+            // Insertion dans Fonds
+            $stmt = $db->prepare("INSERT INTO Fonds (montant_fonds) VALUES (?)");
+            $stmt->execute([$data->montant_fonds]);
+            $id_fonds = $db->lastInsertId();
+            
+            // Insertion dans Details_fonds avec type 'Depot' (id=1)
+            $stmt = $db->prepare("INSERT INTO Details_fonds (id_fonds, id_type_transactions, date_details) VALUES (?, 1, NOW())");
+            $stmt->execute([$id_fonds]);
+            
+            $db->commit();
+            return $id_fonds;
+        } catch (Exception $e) {
+            $db->rollBack();
+            throw $e;
+        }
     }
 } 
