@@ -34,6 +34,7 @@
           <th>Taux (%)</th>
           <th>Durée (mois)</th>
           <th>Intérêt total (€)</th>
+          <th>Exporter</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -86,11 +87,17 @@
             <td>${e.pourcentage}</td>
             <td>${e.duree_en_mois}</td>
             <td>${parseFloat(e.interet_total).toFixed(2)}</td>
+            <td><button onclick="exporterPret(${e.id_prets})">Exporter PDF</button></td>
           `;
           tbody.appendChild(tr);
         });
       });
     }
+
+    function exporterPret(id_prets) {
+      window.open(`/s4-final/views/exports/pret.php?id_prets=${id_prets}`, '_blank');
+    }
+
     chargerTaux();
     chargerInteretsPrets();
 

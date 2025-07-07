@@ -64,4 +64,19 @@ class Prets {
         $stmt = $db->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public static function getDetailsPret($id_prets) {
+        $db = getDB();
+        $sql = "
+            SELECT p.*, c.nom_clients, c.prenom_clients, t.nom_type_pret, tx.pourcentage
+            FROM Prets p
+            JOIN Clients c ON p.id_clients = c.id_clients
+            JOIN Types_pret t ON p.id_types_pret = t.id_types_pret
+            JOIN Taux tx ON p.id_types_pret = tx.id_types_pret
+            WHERE p.id_prets = ?
+        ";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id_prets]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 } 
