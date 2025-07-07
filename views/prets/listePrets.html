@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Prêts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded shadow">
+        <h1 class="text-2xl font-bold mb-6 text-center">Liste des Prêts</h1>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200" id="pretsTable">
+                <thead>
+                    <tr class="bg-gray-100 text-gray-700">
+                        <th class="py-2 px-4 border-b">ID</th>
+                        <th class="py-2 px-4 border-b">Type de prêt</th>
+                        <th class="py-2 px-4 border-b">Client</th>
+                        <th class="py-2 px-4 border-b">Montant</th>
+                        <th class="py-2 px-4 border-b">Date début</th>
+                        <th class="py-2 px-4 border-b">Durée (mois)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-6 text-center">
+            <a href="formPrets.html"
+                class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded transition">Ajouter
+                un prêt</a>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script>
+        fetch(`${API_BASE}/prets`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector('#pretsTable tbody');
+                data.forEach(pret => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-gray-50";
+                    tr.innerHTML = `
+                        <td class='py-2 px-4 border-b text-center'>${pret.id_prets}</td>
+                        <td class='py-2 px-4 border-b text-center'>${pret.id_types_pret}</td>
+                        <td class='py-2 px-4 border-b text-center'>${pret.id_clients}</td>
+                        <td class='py-2 px-4 border-b text-center'>${pret.montant_prets}</td>
+                        <td class='py-2 px-4 border-b text-center'>${pret.date_debut}</td>
+                        <td class='py-2 px-4 border-b text-center'>${pret.duree_en_mois}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+    </script>
+</body>
+
+</html>

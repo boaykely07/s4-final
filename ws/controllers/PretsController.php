@@ -1,5 +1,9 @@
 <?php
 require_once __DIR__ . '/../models/Prets.php';
+require_once __DIR__ . '/../models/MouvementPrets.php';
+require_once __DIR__ . '/../models/Fonds.php';
+require_once __DIR__ . '/../models/DetailsFonds.php';
+require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers/Utils.php';
 
 class PretsController {
@@ -15,8 +19,46 @@ class PretsController {
 
     public static function create() {
         $data = Flight::request()->data;
-        $id = Prets::create($data);
-        Flight::json(['message' => 'Prêt ajouté', 'id' => $id]);
+        $pret_id = Prets::create($data);
+
+        $db = getDB();
+        // 1. Trouver le statut 'Approuvé'
+        $stmt = $db->prepare("SELECT id_status_prets FROM Status_prets WHERE nom_status = 'Approuvé' LIMIT 1");
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $id_status_prets = $row ? $row['id_status_prets'] : 2;
+
+        // 2. Insérer dans Mouvement_prets (statut Approuvé)
+        MouvementPrets::create((object)[
+            'id_prets' => $pret_id,
+            'id_status_prets' => $id_status_prets,
+            'date_mouvement' => date('Y-m-d')
+        ]);
+
+        // 3. Créer un nouveau fonds avec le montant du prêt
+        $id_fonds = Fonds::create((object)['montant_fonds' => $data->montant_prets]);
+
+        // 4. Trouver le type de transaction 'Retrait'
+        $stmt = $db->prepare("SELECT id_type_transactions FROM Type_transactions WHERE nom_type_transactions = 'Retrait' LIMIT 1");
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $id_type_transactions = $row ? $row['id_type_transactions'] : 2;
+
+        // 5. Afficher les données dans la console avant insertion dans Details_fonds
+        error_log('Insertion DetailsFonds : ' . json_encode([
+            'id_fonds' => $id_fonds,
+            'id_type_transactions' => $id_type_transactions,
+            'date_details' => date('Y-m-d'),
+            'id_prets' => $pret_id
+        ]));
+        DetailsFonds::create((object)[
+            'id_fonds' => $id_fonds,
+            'id_type_transactions' => $id_type_transactions,
+            'date_details' => date('Y-m-d'),
+            'id_prets' => $pret_id
+        ]);
+
+        Flight::json(['message' => 'Prêt ajouté et approuvé, fonds et mouvement créés', 'id' => $pret_id]);
     }
 
     public static function update($id) {

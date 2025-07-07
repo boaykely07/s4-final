@@ -17,15 +17,15 @@ class DetailsFonds {
 
     public static function create($data) {
         $db = getDB();
-        $stmt = $db->prepare("INSERT INTO Details_fonds (id_fonds, id_type_transactions, montant_transaction, date_details, id_prets) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$data->id_fonds, $data->id_type_transactions, $data->montant_transaction, $data->date_details, $data->id_prets]);
+        $stmt = $db->prepare("INSERT INTO Details_fonds (id_fonds, id_type_transactions, date_details, id_prets) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$data->id_fonds, $data->id_type_transactions, $data->date_details, $data->id_prets]);
         return $db->lastInsertId();
     }
 
     public static function update($id, $data) {
         $db = getDB();
-        $stmt = $db->prepare("UPDATE Details_fonds SET id_fonds = ?, id_type_transactions = ?, montant_transaction = ?, date_details = ?, id_prets = ? WHERE id_details_fonds = ?");
-        $stmt->execute([$data->id_fonds, $data->id_type_transactions, $data->montant_transaction, $data->date_details, $data->id_prets, $id]);
+        $stmt = $db->prepare("UPDATE Details_fonds SET id_fonds = ?, id_type_transactions = ?, date_details = ?, id_prets = ? WHERE id_details_fonds = ?");
+        $stmt->execute([$data->id_fonds, $data->id_type_transactions, $data->date_details, $data->id_prets, $id]);
     }
 
     public static function delete($id) {
