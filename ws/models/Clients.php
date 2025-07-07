@@ -33,4 +33,4 @@ class Clients {
         $stmt = $db->prepare("DELETE FROM Clients WHERE id_clients = ?");
         $stmt->execute([$id]);
     }
-} 
+}
