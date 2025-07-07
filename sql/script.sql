@@ -1,6 +1,6 @@
-CREATE DATABASE tp_flight_etudiant CHARACTER SET utf8mb4;
+CREATE DATABASE tp_flight CHARACTER SET utf8mb4;
 
-USE tp_flight_etudiant;
+USE tp_flight;
 
 CREATE TABLE etudiant (
     id INT AUTO_INCREMENT PRIMARY KEY,
