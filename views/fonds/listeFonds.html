@@ -1,44 +1,34 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des fonds</title>
 </head>
+
 <body>
     <div>
         <h2>Fonds Disponible</h2>
         <p id="fondsActuel"></p>
     </div>
-    
-    <script src="config.js"></script>
-    <script>
 
-        function ajax(method, url, data, callback) {
-        const xhr = new XMLHttpRequest();
-        xhr.open(method, apiBase + url, true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    callback(JSON.parse(xhr.responseText));
-                } else {
-                    alert("Erreur lors de l'ajout du fonds");
-                    console.error(xhr.responseText);
-                }
-            }
-        };
-        xhr.send(data);
-    }
+    <script src="../../config.js"></script>
+    <script>
         function afficherFondsActuel() {
-            ajax("GET", "/fonds/actuel", null, (response) => {
-                const fondsActuel = document.getElementById("fondsActuel");
-                fondsActuel.textContent = `Fonds disponible : ${response.fonds_disponible} €`;
-            });
+            fetch(`${API_BASE}/fonds/actuel`)
+                .then(res => res.json())
+                .then(response => {
+                    const fondsActuel = document.getElementById("fondsActuel");
+                    fondsActuel.textContent = `Fonds disponible : ${response.fonds_disponible} €`;
+                })
+                .catch(() => {
+                    alert("Erreur lors de la récupération du fonds actuel");
+                });
         }
-    
-    document.addEventListener('DOMContentLoaded', afficherFondsActuel);
+        document.addEventListener('DOMContentLoaded', afficherFondsActuel);
     </script>
 
 </body>
+
 </html>

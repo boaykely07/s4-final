@@ -36,13 +36,28 @@ class Fonds {
 
     public static function getFondsActuel() {
         $db = getDB();
-        $stmt = $db->query("
-            SELECT 
-                (SELECT montant_fonds FROM Fonds ORDER BY id_fonds DESC LIMIT 1) - 
-                COALESCE(SUM(montant_prets), 0) as fonds_disponible 
-            FROM Prets
-        ");
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        // Somme des dépôts
+        $sqlDepot = "
+            SELECT COALESCE(SUM(f.montant_fonds), 0) as total_depot
+            FROM Details_fonds df
+            JOIN Fonds f ON df.id_fonds = f.id_fonds
+            WHERE df.id_type_transactions = 1
+        ";
+        $stmt = $db->query($sqlDepot);
+        $totalDepot = $stmt->fetchColumn();
+
+        // Somme des retraits
+        $sqlRetrait = "
+            SELECT COALESCE(SUM(f.montant_fonds), 0) as total_retrait
+            FROM Details_fonds df
+            JOIN Fonds f ON df.id_fonds = f.id_fonds
+            WHERE df.id_type_transactions = 2
+        ";
+        $stmt = $db->query($sqlRetrait);
+        $totalRetrait = $stmt->fetchColumn();
+
+        $fondsDisponible = $totalDepot - $totalRetrait;
+        return ['fonds_disponible' => $fondsDisponible];
     }
 
     public static function create($data) {
