@@ -77,6 +77,7 @@ CREATE TABLE Type_transactions(
     id_type_transactions INT AUTO_INCREMENT PRIMARY KEY,
     nom_type_transactions VARCHAR(50) NOT NULL UNIQUE
 );
+INSERT INTO Type_transactions ('Depot')
 
 -- Table pour détailler les mouvements de fonds
 CREATE TABLE Details_fonds(

@@ -425,12 +425,12 @@
       fetch(`${API_BASE}/fonds/actuel`)
         .then(res => res.json())
         .then(response => {
-          const montant = response.fonds_disponible || 10000000; // Fallback to 10M if API fails
+          const montant = response.fonds_disponible || 0; // Fallback to 10M if API fails
           animateMontantActuel(montant);
         })
         .catch(() => {
           console.error('Erreur lors de la récupération du fonds actuel');
-          animateMontantActuel(10000000); // Fallback value
+          animateMontantActuel(0); // Fallback value
         });
     });
   </script>
