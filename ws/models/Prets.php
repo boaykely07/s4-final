@@ -4,7 +4,22 @@ require_once __DIR__ . '/../db.php';
 class Prets {
     public static function getAll() {
         $db = getDB();
-        $stmt = $db->query("SELECT * FROM Prets");
+        $stmt = $db->query("
+            SELECT p.*, s.nom_status
+            FROM Prets p
+            LEFT JOIN (
+                SELECT m1.id_prets, m1.id_status_prets
+                FROM Mouvement_prets m1
+                WHERE m1.id_mouvement_prets = (
+                    SELECT m2.id_mouvement_prets
+                    FROM Mouvement_prets m2
+                    WHERE m2.id_prets = m1.id_prets
+                    ORDER BY m2.date_mouvement DESC, m2.id_mouvement_prets DESC
+                    LIMIT 1
+                )
+            ) mp ON p.id_prets = mp.id_prets
+            LEFT JOIN Status_prets s ON mp.id_status_prets = s.id_status_prets
+        ");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
