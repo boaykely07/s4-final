@@ -216,19 +216,23 @@
             // Calculs estimés (mensualité, coût total)
             const montant = parseFloat(sim.montant_prets);
             const duree = parseInt(sim.duree_en_mois);
+            const delai = parseInt(sim.delai_premier_remboursement) || 0;
+            const dureeReelle = duree - delai > 0 ? duree - delai : 1;
             let taux = 0;
             if (sim.id_types_pret && window.tauxByType) taux = parseFloat(window.tauxByType[sim.id_types_pret] || 0);
             const assurance = parseFloat(sim.pourcentage_assurance || 0);
             const r = taux / 12 / 100;
-            const annuite = r > 0 ? montant * (r * Math.pow(1 + r, duree)) / (Math.pow(1 + r, duree) - 1) : montant / duree;
+            const annuite = r > 0 ? montant * (r * Math.pow(1 + r, dureeReelle)) / (Math.pow(1 + r, dureeReelle) - 1) : montant / dureeReelle;
             const assurance_mensuelle = montant * assurance / 100;
             const mensualite_totale = annuite + assurance_mensuelle;
-            const cout_total = mensualite_totale * duree;
+            const cout_total = mensualite_totale * dureeReelle;
             document.getElementById(cible).innerHTML = `
                 <div><b>Client :</b> ${sim.nom_clients ? sim.nom_clients + ' ' + sim.prenom_clients : '-'}</div>
                 <div><b>Type de prêt :</b> ${sim.nom_type_pret || sim.id_types_pret}</div>
                 <div><b>Montant :</b> ${sim.montant_prets} €</div>
                 <div><b>Durée :</b> ${sim.duree_en_mois} mois</div>
+                <div><b>Délai avant 1er remboursement :</b> ${delai} mois</div>
+                <div><b>Durée réelle :</b> ${dureeReelle} mois</div>
                 <div><b>Assurance :</b> ${sim.pourcentage_assurance || '-'} %</div>
                 <div><b>Taux d'intérêt :</b> ${taux} %</div>
                 <div><b>Mensualité estimée :</b> ${mensualite_totale.toFixed(2)} €</div>

@@ -156,7 +156,9 @@ class PretsController {
         $data = Flight::request()->data;
         $montant = floatval($data->montant);
         $taux = floatval($data->taux);
-        $duree = intval($data->duree);
+        $delai = isset($data->delai) ? intval($data->delai) : 0;
+        $duree = intval($data->duree) - $delai;
+        if ($duree < 1) $duree = 1;
         $assurance = isset($data->assurance) ? floatval($data->assurance) : 0;
         $annuite = self::calculerAnnuite($montant, $taux, $duree);
         $assurance_mensuelle = self::calculerAssuranceMensuelle($montant, $assurance);
