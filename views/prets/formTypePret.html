@@ -92,20 +92,16 @@
             e.preventDefault();
             const nom = document.getElementById('nom_type_pret').value;
             const pourcentage = document.getElementById('pourcentage').value;
-            // 1. Créer le type de prêt
+            // Envoyer nom_type_pret ET pourcentage dans la même requête
             fetch(`${API_BASE}/typespret`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nom_type_pret: nom })
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nom_type_pret: nom, pourcentage: pourcentage })
             })
                 .then(res => res.json())
                 .then(res => {
-                    // 2. Créer le taux associé
-                    fetch(`${API_BASE}/taux`, {
-                        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id_types_pret: res.id, pourcentage })
-                    })
-                        .then(() => {
-                            document.getElementById('message').innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded">Type de prêt et taux ajoutés avec succès !</div>';
-                            setTimeout(() => { window.location = 'listeTypesPret.html'; }, 1200);
-                        });
+                    document.getElementById('message').innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded">Type de prêt et taux ajoutés avec succès !</div>';
+                    setTimeout(() => { window.location = 'listeTypesPret.html'; }, 1200);
                 })
                 .catch(() => {
                     document.getElementById('message').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de l\'ajout.</div>';
