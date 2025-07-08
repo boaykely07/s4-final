@@ -5,6 +5,35 @@
     <meta charset="UTF-8">
     <title>Liste des Prêts</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+          font-family: sans-serif;
+          padding: 20px;
+        }
+    
+        input,
+        button {
+          margin: 5px;
+          padding: 5px;
+        }
+    
+        table {
+          border-collapse: collapse;
+          width: 100%;
+          margin-top: 20px;
+        }
+    
+        th,
+        td {
+          border: 1px solid #ccc;
+          padding: 8px;
+          text-align: left;
+        }
+    
+        th {
+          background-color: #f2f2f2;
+        }
+      </style>
 </head>
 
 <body class="bg-gray-50 min-h-screen">
@@ -22,6 +51,7 @@
                         <th class="py-2 px-4 border-b">Durée (mois)</th>
                         <th class="py-2 px-4 border-b">Statut</th>
                         <th class="py-2 px-4 border-b">Action</th>
+                        <th class="py-2 px-4 border-b">Exporter</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,8 +87,8 @@
                     tr.className = "hover:bg-gray-50";
                     tr.innerHTML = `
                         <td class='py-2 px-4 border-b text-center'>${pret.id_prets}</td>
-                        <td class='py-2 px-4 border-b text-center'>${pret.id_types_pret}</td>
-                        <td class='py-2 px-4 border-b text-center'>${pret.id_clients}</td>
+                        <td class='py-2 px-4 border-b text-center'>${pret.nom_type_pret || pret.id_types_pret}</td>
+                        <td class='py-2 px-4 border-b text-center'>${pret.nom_clients ? pret.nom_clients + ' ' + pret.prenom_clients : pret.id_clients}</td>
                         <td class='py-2 px-4 border-b text-center'>${pret.montant_prets}</td>
                         <td class='py-2 px-4 border-b text-center'>${pret.date_debut}</td>
                         <td class='py-2 px-4 border-b text-center'>${pret.duree_en_mois}</td>
@@ -66,11 +96,17 @@
                         <td class='py-2 px-4 border-b text-center'>
                             <button onclick="validerPret(${pret.id_prets})" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded mr-2">Valider</button>
                             <button onclick="annulerPret(${pret.id_prets})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">Annuler</button>
+                        <td class='py-2 px-4 border-b text-center'>
+                            <button onclick="exporterPret(${pret.id_prets})" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded">PDF</button>
                         </td>
                     `;
                     tbody.appendChild(tr);
                 });
             });
+
+        function exporterPret(id_prets) {
+            window.open(`/s4-final/views/exports/pret.php?id_prets=${id_prets}`, '_blank');
+        }
     </script>
 </body>
 
