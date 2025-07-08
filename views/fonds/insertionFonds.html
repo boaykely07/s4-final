@@ -162,8 +162,7 @@
             </div>
 
             <div class="space-y-2 px-4">
-                <a href="index.html"
-                    class="block text-teal-100 font-medium py-3 px-4 rounded-lg bg-white bg-opacity-20">
+                <a href="../../index.html" class="block text-teal-100 font-medium py-3 px-4 rounded-lg bg-white bg-opacity-20">
                     ACCEUIL
                 </a>
                 <a href="#"
@@ -271,8 +270,7 @@
                     </svg>
                 </button>
                 <div class="dropdown-enter ml-6 mt-2 space-y-1">
-                    <a href="interet.html"
-                        class="menu-item flex items-center space-x-3 p-3 rounded-lg text-teal-100 hover:bg-white hover:bg-opacity-10">
+                    <a href="views/statistiques/interets_gagnes.php" class="menu-item flex items-center space-x-3 p-3 rounded-lg text-teal-100 hover:bg-white hover:bg-opacity-10">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
                         </svg>
@@ -285,26 +283,24 @@
 
     <!-- Main Content -->
     <div class="lg:ml-72 mt-20 min-h-screen">
-        <div class="p-6 lg:p-8">
+        <div class="p-6 lg:p-6">
             <!-- Form Section -->
             <div class="floating-card rounded-2xl shadow-2xl mb-8 overflow-hidden">
-                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 p-8">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 p-4">
                     <div class="text-white">
-                        <h1 class="text-4xl font-bold mb-2">Insertion des Fonds</h1>
-                        <p class="text-xl text-teal-100">Ajoutez un montant à vos fonds</p>
+                        <h1 class="text-2xl font-bold mb-1">Insertion des Fonds</h1>
+                        <p class="text-base text-teal-100">Ajoutez un montant à vos fonds</p>
                     </div>
                 </div>
-
-                <div class="p-8">
+                
+                <div class="p-4">
                     <div class="max-w-md mx-auto">
-                        <div class="mb-6">
-                            <label for="montant_fonds" class="block text-gray-700 font-semibold mb-2">Montant
-                                (€)</label>
-                            <input type="number" id="montant_fonds" placeholder="Entrez le montant"
-                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800 placeholder-gray-400 transition-all duration-300">
+                        <div id="message" class="mb-4"></div>
+                        <div class="mb-4">
+                            <label for="montant_fonds" class="block text-gray-700 font-semibold mb-1">Montant (€)</label>
+                            <input type="number" id="montant_fonds" placeholder="Entrez le montant" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800 placeholder-gray-400 transition-all duration-300">
                         </div>
-                        <button onclick="ajouterFonds()"
-                            class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover-scale transition-all duration-300">
+                        <button onclick="ajouterFonds()" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold px-4 py-2 rounded-lg shadow-lg hover-scale transition-all duration-300">
                             Ajouter
                         </button>
                     </div>
@@ -336,8 +332,7 @@
             <button
                 class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover-scale transition-all duration-300 flex items-center space-x-2">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path
-                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13esis-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                 </svg>
                 <span>TROUVER UNE AGENCE</span>
             </button>
@@ -399,8 +394,9 @@
         // Form submission
         function ajouterFonds() {
             const montant = document.getElementById("montant_fonds").value;
+            const messageDiv = document.getElementById("message");
             if (!montant) {
-                alert("Veuillez saisir un montant");
+                messageDiv.innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Veuillez saisir un montant</div>';
                 return;
             }
             fetch(`${API_BASE}/fonds`, {
@@ -411,11 +407,11 @@
                 .then(res => res.json())
                 .then(response => {
                     document.getElementById("montant_fonds").value = "";
-                    alert("Fonds ajouté avec succès");
+                    messageDiv.innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded">Fonds ajouté avec succès</div>';
                     console.log("Réponse serveur:", response);
                 })
                 .catch(() => {
-                    alert("Erreur lors de l'ajout du fonds");
+                    messageDiv.innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de l\'ajout du fonds</div>';
                 });
         }
     </script>

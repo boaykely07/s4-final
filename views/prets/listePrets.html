@@ -286,30 +286,48 @@
     </div>
     <script src="../../config.js"></script>
     <script>
-        // Dropdown functionality
-        function toggleDropdown(element) {
-            const dropdown = element.parentElement;
-            const menu = dropdown.querySelector('.dropdown-enter');
-            const arrow = dropdown.querySelector('.dropdown-arrow');
-            menu.classList.toggle('open');
-            arrow.classList.toggle('rotate-180');
+        function ajax(method, url, data, callback) {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, apiBase + url, true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (xhr.status === 400) {
+                            const errorMessage = `${response.error}\nFonds disponible: ${response.details.fonds_disponible}€\nMontant demandé: ${response.details.montant_demande}€`;
+                            alert(errorMessage);
+                        } else if (xhr.status >= 200 && xhr.status < 300) {
+                            callback(response);
+                        }
+                    } catch (e) {
+                        console.error("Erreur:", e);
+                        alert("Erreur lors du traitement de la demande");
+                    }
+                }
+            };
+            xhr.send(data);
         }
-        document.addEventListener('click', function (e) {
-            if (!e.target.closest('.dropdown')) {
-                document.querySelectorAll('.dropdown-enter').forEach(menu => { menu.classList.remove('open'); });
-                document.querySelectorAll('.dropdown-arrow').forEach(arrow => { arrow.classList.remove('rotate-180'); });
-            }
-        });
-        // Mobile menu functionality
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuBtn.addEventListener('click', function () { mobileMenu.classList.toggle('open'); });
-        document.addEventListener('click', function (e) {
-            if (!e.target.closest('#mobile-menu') && !e.target.closest('#mobile-menu-btn')) {
-                mobileMenu.classList.remove('open');
-            }
-        });
-        // Table logic
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #ff4444;
+                color: white;
+                padding: 15px 30px;
+                border-radius: 5px;
+                font-weight: bold;
+                z-index: 1000;
+            `;
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 3000);
+        }
+
         function validerPret(id) {
             fetch(`${API_BASE}/prets/valider/${id}`, { method: 'POST' })
                 .then(res => res.json())
