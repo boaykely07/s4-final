@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparer des Simulations - BNI Madagascar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f766e 0%, #059669 50%, #10b981 100%);
+        }
+
+        .sidebar-gradient {
+            background: linear-gradient(180deg, #0f766e 0%, #134e4a 100%);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hover-scale {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-scale:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .menu-item {
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(8px);
+        }
+
+        .floating-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .currency-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen">
+    <!-- Sidebar (copiée des autres pages) -->
+    <div class="fixed top-20 left-0 w-72 h-full sidebar-gradient shadow-2xl z-20 hidden lg:block">
+        <div class="p-6 space-y-2">
+            <a href="insertionFonds.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl bg-white bg-opacity-20 text-white group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">FONDS ACTUELS</div>
+                    <div class="text-sm text-teal-100 opacity-75">Gérer vos fonds</div>
+                </div>
+            </a>
+            <a href="listePrets.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white hover:bg-white hover:bg-opacity-10 group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">PRÊTS</div>
+                    <div class="text-sm text-teal-100 opacity-75">Demandes de prêts</div>
+                </div>
+            </a>
+            <a href="simulateurPret.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white hover:bg-white hover:bg-opacity-10 group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14.5v-5h2l-3-4-3 4h2v5h2z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">SIMULATEUR</div>
+                    <div class="text-sm text-teal-100 opacity-75">Simuler un prêt</div>
+                </div>
+            </a>
+            <a href="comparaisonSimulations.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white bg-white bg-opacity-10 group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 17h18M6 10h12M9 3h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" fill="none" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">COMPARER SIMULATIONS</div>
+                    <div class="text-sm text-teal-100 opacity-75">Comparer plusieurs simulations</div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="lg:ml-72 mt-20 min-h-screen">
+        <div class="p-6 lg:p-8">
+            <div class="floating-card rounded-2xl shadow-2xl mb-8 overflow-hidden max-w-5xl mx-auto">
+                <div
+                    class="bg-gradient-to-r from-teal-600 to-emerald-600 p-8 flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div class="text-white">
+                        <h1 class="text-4xl font-bold mb-2">Comparer deux Simulations</h1>
+                        <p class="text-xl text-teal-100">Choisissez deux simulations à comparer côte à côte</p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <a href="simulateurPret.html"
+                            class="inline-block bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition text-lg">Créer
+                            une nouvelle simulation</a>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Colonne gauche -->
+                        <div>
+                            <label for="selectSim1" class="block text-gray-700 font-semibold mb-2">Simulation 1</label>
+                            <select id="selectSim1"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800 mb-4"></select>
+                            <div id="detailsSim1" class="bg-gray-50 rounded-lg p-4 shadow"></div>
+                        </div>
+                        <!-- Colonne droite -->
+                        <div>
+                            <label for="selectSim2" class="block text-gray-700 font-semibold mb-2">Simulation 2</label>
+                            <select id="selectSim2"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800 mb-4"></select>
+                            <div id="detailsSim2" class="bg-gray-50 rounded-lg p-4 shadow"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../config.js"></script>
+    <script>
+        let simulations = [];
+        // Charger les simulations dans les deux selects
+        fetch(`${API_BASE}/simulations`)
+            .then(res => res.json())
+            .then(data => {
+                simulations = data;
+                const select1 = document.getElementById('selectSim1');
+                const select2 = document.getElementById('selectSim2');
+                select1.innerHTML = '<option value="">-- Choisir --</option>';
+                select2.innerHTML = '<option value="">-- Choisir --</option>';
+                data.forEach(sim => {
+                    const label = (sim.nom_clients ? sim.nom_clients + ' ' + sim.prenom_clients : 'Client') + ' | ' + (sim.nom_type_pret || sim.id_types_pret) + ' | ' + sim.montant_prets + ' €';
+                    const opt1 = document.createElement('option');
+                    opt1.value = sim.id_simulation;
+                    opt1.textContent = label;
+                    const opt2 = opt1.cloneNode(true);
+                    select1.appendChild(opt1);
+                    select2.appendChild(opt2);
+                });
+            });
+        function afficherDetails(id, cible) {
+            const sim = simulations.find(s => s.id_simulation == id);
+            if (!sim) { document.getElementById(cible).innerHTML = ''; return; }
+            // Calculs estimés (mensualité, coût total)
+            const montant = parseFloat(sim.montant_prets);
+            const duree = parseInt(sim.duree_en_mois);
+            let taux = 0;
+            if (sim.id_types_pret && window.tauxByType) taux = parseFloat(window.tauxByType[sim.id_types_pret] || 0);
+            const assurance = parseFloat(sim.pourcentage_assurance || 0);
+            const r = taux / 12 / 100;
+            const annuite = r > 0 ? montant * (r * Math.pow(1 + r, duree)) / (Math.pow(1 + r, duree) - 1) : montant / duree;
+            const assurance_mensuelle = montant * assurance / 100;
+            const mensualite_totale = annuite + assurance_mensuelle;
+            const cout_total = mensualite_totale * duree;
+            document.getElementById(cible).innerHTML = `
+                <div><b>Client :</b> ${sim.nom_clients ? sim.nom_clients + ' ' + sim.prenom_clients : '-'}</div>
+                <div><b>Type de prêt :</b> ${sim.nom_type_pret || sim.id_types_pret}</div>
+                <div><b>Montant :</b> ${sim.montant_prets} €</div>
+                <div><b>Durée :</b> ${sim.duree_en_mois} mois</div>
+                <div><b>Assurance :</b> ${sim.pourcentage_assurance || '-'} %</div>
+                <div><b>Taux d'intérêt :</b> ${taux} %</div>
+                <div><b>Mensualité estimée :</b> ${mensualite_totale.toFixed(2)} €</div>
+                <div><b>Coût total estimé :</b> ${cout_total.toFixed(2)} €</div>
+            `;
+        }
+        // Charger les taux pour le calcul
+        window.tauxByType = {};
+        fetch(`${API_BASE}/taux`).then(res => res.json()).then(tauxList => {
+            tauxList.forEach(taux => { window.tauxByType[taux.id_types_pret] = taux.pourcentage; });
+        });
+        document.getElementById('selectSim1').addEventListener('change', function () {
+            afficherDetails(this.value, 'detailsSim1');
+        });
+        document.getElementById('selectSim2').addEventListener('change', function () {
+            afficherDetails(this.value, 'detailsSim2');
+        });
+    </script>
+</body>
+
+</html>
