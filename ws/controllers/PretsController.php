@@ -20,10 +20,25 @@ class PretsController {
     }
 
     public static function create() {
-        $data = Flight::request()->data;
-        $pret_id = Prets::create($data);
-
-        $db = getDB();
+        try {
+            $data = Flight::request()->data;
+            
+            // Vérifier le solde disponible
+            $fonds = Fonds::getFondsActuel();
+            if ($fonds['fonds_disponible'] < $data->montant_prets) {
+                Flight::json([
+                    'error' => 'Solde demandé supérieur au fonds existant',
+                    'details' => [
+                        'montant_demande' => floatval($data->montant_prets),
+                        'fonds_disponible' => floatval($fonds['fonds_disponible'])
+                    ]
+                ], 400);
+                return;
+            }
+    
+            $pret_id = Prets::create($data);
+            
+            $db = getDB();
         // 1. Trouver le statut 'En attente'
         $stmt = $db->prepare("SELECT id_status_prets FROM Status_prets WHERE nom_status = 'En attente' LIMIT 1");
         $stmt->execute();
@@ -55,7 +70,15 @@ class PretsController {
         ]);
 
         Flight::json(['message' => 'Prêt ajouté', 'id' => $pret_id]);
+    } catch (Exception $e) {
+        Flight::json([
+            'error' => 'Erreur lors de la création du prêt',
+            'details' => [
+                'message' => $e->getMessage()
+            ]
+        ], 500);
     }
+}
 
     public static function update($id) {
         $data = Flight::request()->data;

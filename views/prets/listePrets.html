@@ -66,6 +66,48 @@
     </div>
     <script src="../../config.js"></script>
     <script>
+        function ajax(method, url, data, callback) {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, apiBase + url, true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (xhr.status === 400) {
+                            const errorMessage = `${response.error}\nFonds disponible: ${response.details.fonds_disponible}€\nMontant demandé: ${response.details.montant_demande}€`;
+                            alert(errorMessage);
+                        } else if (xhr.status >= 200 && xhr.status < 300) {
+                            callback(response);
+                        }
+                    } catch (e) {
+                        console.error("Erreur:", e);
+                        alert("Erreur lors du traitement de la demande");
+                    }
+                }
+            };
+            xhr.send(data);
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #ff4444;
+                color: white;
+                padding: 15px 30px;
+                border-radius: 5px;
+                font-weight: bold;
+                z-index: 1000;
+            `;
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 3000);
+        }
+
         function validerPret(id) {
             fetch(`${API_BASE}/prets/valider/${id}`, { method: 'POST' })
                 .then(res => res.json())

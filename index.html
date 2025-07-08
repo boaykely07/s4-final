@@ -144,8 +144,8 @@
             </div>
             
             <div class="space-y-2 px-4">
-                <a href="#" class="block text-teal-100 font-medium py-3 px-4 rounded-lg bg-white bg-opacity-20">
-                    PARTICULIER
+                <a href="index.html" class="block text-teal-100 font-medium py-3 px-4 rounded-lg bg-white bg-opacity-20">
+                    ACCEUIL
                 </a>
                 <a href="#" class="block text-white font-medium py-3 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 transition-all duration-300">
                     PROFESSIONNEL
@@ -208,7 +208,7 @@
                     </svg>
                 </button>
                 <div class="dropdown-enter ml-6 mt-2 space-y-1">
-                    <a href="interet.html" class="menu-item flex items-center space-x-3 p-3 rounded-lg text-teal-100 hover:bg-white hover:bg-opacity-10">
+                    <a href="views/statistiques/interets_gagnes.php" class="menu-item flex items-center space-x-3 p-3 rounded-lg text-teal-100 hover:bg-white hover:bg-opacity-10">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
                         </svg>
@@ -408,12 +408,12 @@
             fetch(`${API_BASE}/fonds/actuel`)
                 .then(res => res.json())
                 .then(response => {
-                    const montant = response.fonds_disponible || 10000000; // Fallback to 10M if API fails
+                    const montant = response.fonds_disponible || 0; // Fallback to 10M if API fails
                     animateMontantActuel(montant);
                 })
                 .catch(() => {
                     console.error('Erreur lors de la récupération du fonds actuel');
-                    animateMontantActuel(10000000); // Fallback value
+                    animateMontantActuel(0); // Fallback value
                 });
         });
     </script>
