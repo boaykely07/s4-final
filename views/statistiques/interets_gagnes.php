@@ -63,7 +63,7 @@
     <!-- Sidebar -->
     <div class="fixed top-20 left-0 w-72 h-full sidebar-gradient shadow-2xl z-20 hidden lg:block">
         <div class="p-6 space-y-2">
-            <a href="../fonds/insertionFonds.html"
+            <a href="../fonds/listeFonds.html"
                 class="menu-item flex items-center space-x-4 p-4 rounded-xl bg-white bg-opacity-20 text-white group">
                 <div class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all duration-300">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
