@@ -230,8 +230,13 @@
                                 id="delai" name="delai" value="0">
                         </div>
                         <div class="flex gap-4">
-                            <button type="submit"
-                                class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover-scale transition-all duration-300">Simuler</button>
+                            <button type="submit" id="btnCalculer"
+                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover-scale transition-all duration-300">Calculer</button>
+                            <button type="button" id="btnValider"
+                                class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover-scale transition-all duration-300">Valider</button>
+                            <button type="button" id="btnEnregistrer"
+                                class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover-scale transition-all duration-300">Enregistrer
+                                simulation</button>
                             <a href="../../index.html"
                                 class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-6 py-3 rounded-lg text-center transition-all duration-300">Retour</a>
                         </div>
@@ -322,6 +327,16 @@
             const taux = tauxByType[idType] || '';
             // document.getElementById('taux').value = taux; // plus de champ taux
         });
+        function getFormData() {
+            return {
+                id_types_pret: document.getElementById('typePret').value,
+                montant_prets: document.getElementById('montant').value,
+                date_debut: new Date().toISOString().slice(0, 10),
+                duree_en_mois: document.getElementById('duree').value,
+                pourcentage_assurance: document.getElementById('assurance').value || null,
+                delai_premier_remboursement: document.getElementById('delai').value || null
+            };
+        }
         document.getElementById('simulateurForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const montant = parseFloat(document.getElementById('montant').value);
@@ -345,6 +360,49 @@
                 `;
                 });
         });
+        document.getElementById('btnValider').onclick = function () {
+            const data = getFormData();
+            // 1. Enregistrer la simulation
+            fetch(`${API_BASE}/simulations`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(() => {
+                    // 2. Enregistrer le prêt
+                    fetch(`${API_BASE}/prets`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            document.getElementById('resultat').innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded">Simulation et prêt enregistrés avec succès !</div>';
+                        })
+                        .catch(() => {
+                            document.getElementById('resultat').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de l\'enregistrement du prêt.</div>';
+                        });
+                })
+                .catch(() => {
+                    document.getElementById('resultat').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de l\'enregistrement de la simulation.</div>';
+                });
+        };
+        document.getElementById('btnEnregistrer').onclick = function () {
+            const data = getFormData();
+            fetch(`${API_BASE}/simulations`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    document.getElementById('resultat').innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded">Simulation enregistrée avec succès !</div>';
+                })
+                .catch(() => {
+                    document.getElementById('resultat').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de l\'enregistrement de la simulation.</div>';
+                });
+        };
     </script>
 </body>
 

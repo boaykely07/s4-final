@@ -39,3 +39,11 @@ Flight::route('POST /prets/annuler/@id', ['PretsController', 'annuler']);
 
 // Simulation de prêt (API)
 Flight::route('POST /simulateurpret', ['PretsController', 'simulate']);
+
+require_once __DIR__ . '/../controllers/SimulationsController.php';
+
+// Simulations
+Flight::route('GET /simulations', ['SimulationsController', 'getAll']);
+Flight::route('GET /simulations/@id', ['SimulationsController', 'getById']);
+Flight::route('POST /simulations', ['SimulationsController', 'create']);
+Flight::route('DELETE /simulations/@id', ['SimulationsController', 'delete']);

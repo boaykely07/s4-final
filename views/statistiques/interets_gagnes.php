@@ -131,15 +131,15 @@
                     </div>
                     <div class="overflow-x-auto">
                         <table id="table-interets-mois" class="min-w-full bg-white border border-gray-200 rounded-lg">
-                            <thead>
+        <thead>
                                 <tr class="bg-gray-100 text-gray-700">
                                     <th onclick="sortTable(0)" class="py-2 px-4 border-b cursor-pointer">Mois/Année</th>
                                     <th onclick="sortTable(1)" class="py-2 px-4 border-b cursor-pointer">Intérêts gagnés</th>
                                     <th onclick="sortTable(2)" class="py-2 px-4 border-b cursor-pointer">Nb prêts</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
                     </div>
                     <div id="pagination" class="mt-4"></div>
                     <canvas id="chartInterets" height="80" class="mt-8"></canvas>
