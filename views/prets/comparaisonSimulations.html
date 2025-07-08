@@ -79,10 +79,46 @@
 </head>
 
 <body class="gradient-bg min-h-screen">
-    <!-- Sidebar (copiée des autres pages) -->
+    <!-- Mobile Menu Button -->
+    <button id="mobile-menu-btn"
+        class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+        <svg class="w-6 h-6 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-40 bg-white shadow-xl border-b border-gray-200">
+        <div class="w-full px-4 sm:px-6 lg:pl-4 lg:pr-8">
+            <div class="flex items-center h-20">
+                <div class="flex items-center space-x-3 pl-4">
+                    <div
+                        class="w-12 h-12 bg-gradient-to-br from-red-500 via-teal-600 to-emerald-500 rounded-xl shadow-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">BNI</span>
+                    </div>
+                    <div class="text-2xl font-black text-teal-700 tracking-wide">BNI MADAGASCAR</div>
+                </div>
+                <div class="flex-grow"></div>
+            </div>
+        </div>
+    </nav>
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="mobile-menu lg:hidden fixed top-0 left-0 h-full w-80 sidebar-gradient z-30 shadow-2xl">
+        <div class="pt-20 pb-6">
+            <div class="px-6 mb-8">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-red-500 via-teal-600 to-emerald-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xs">BNI</span>
+                    </div>
+                    <div class="text-white font-bold text-lg">MENU</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sidebar -->
     <div class="fixed top-20 left-0 w-72 h-full sidebar-gradient shadow-2xl z-20 hidden lg:block">
         <div class="p-6 space-y-2">
-            <a href="insertionFonds.html"
+            <a href="../fonds/insertionFonds.html"
                 class="menu-item flex items-center space-x-4 p-4 rounded-xl bg-white bg-opacity-20 text-white group">
                 <div
                     class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all duration-300">
@@ -188,6 +224,36 @@
             </div>
         </div>
     </div>
+    
+  <!-- Currency Rates Footer -->
+  <div
+  class="fixed bottom-0 left-0 right-0 lg:left-72 bg-gradient-to-r from-teal-700 to-teal-800 text-white shadow-2xl border-t border-teal-600">
+  <div class="flex flex-col sm:flex-row items-center justify-between p-4 space-y-4 sm:space-y-0">
+      <div class="flex items-center space-x-6">
+          <div class="font-bold text-lg">COURS DE DEVISES</div>
+          <div class="flex space-x-8">
+              <div class="text-center currency-pulse">
+                  <div class="font-bold text-lg">EURO</div>
+                  <div class="text-emerald-300 font-semibold">5 044,10 Ar</div>
+              </div>
+              <div class="text-center currency-pulse">
+                  <div class="font-bold text-lg">USD</div>
+                  <div class="text-emerald-300 font-semibold">4 464,77 Ar</div>
+              </div>
+          </div>
+          <div class="text-sm text-teal-200">Mis à jour le 2025-04-30</div>
+      </div>
+      <button
+          class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover-scale transition-all duration-300 flex items-center space-x-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+          </svg>
+          <span>TROUVER UNE AGENCE</span>
+      </button>
+  </div>
+</div>
+
     <script src="../../config.js"></script>
     <script>
         let simulations = [];
