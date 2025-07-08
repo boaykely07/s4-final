@@ -13,6 +13,7 @@ Flight::route('GET /etudiants', ['EtudiantController', 'getAll']);
 Flight::route('GET /tauxInteret', ['StatistiquesController', 'getInteretGagnes']);
 Flight::route('GET /interetsPrets', ['StatistiquesController', 'getInteretsPrets']);
 Flight::route('GET /interetsMois', ['StatistiquesController', 'getInteretsMois']);
+Flight::route('GET /statistiques/montants', ['StatistiquesController', 'getMontantsParMois']);
 require_once __DIR__ . '/../controllers/PretsController.php';
 require_once __DIR__ . '/../controllers/TypesPretController.php';
 require_once __DIR__ . '/../controllers/ClientsController.php';

@@ -14,7 +14,8 @@ INSERT INTO Status_prets (nom_status) VALUES
 -- Types de transactions
 INSERT INTO Type_transactions (nom_type_transactions) VALUES
 ('Depot'),
-('Retrait');
+('Retrait')
+('remboursement');
 
 -- Clients
 INSERT INTO Clients (nom_clients, prenom_clients, date_naissance, salaire) VALUES
