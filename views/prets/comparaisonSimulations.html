@@ -163,6 +163,12 @@
                             <select id="selectSim1"
                                 class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800 mb-4"></select>
                             <div id="detailsSim1" class="bg-gray-50 rounded-lg p-4 shadow"></div>
+                            <div class="flex justify-center mt-4">
+                                <button id="btnValiderPret1"
+                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg shadow-lg hover-scale transition-all duration-300">Valider
+                                    comme prêt</button>
+                            </div>
+                            <div id="messageValidation1" class="mt-2 text-center"></div>
                         </div>
                         <!-- Colonne droite -->
                         <div>
@@ -170,6 +176,12 @@
                             <select id="selectSim2"
                                 class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800 mb-4"></select>
                             <div id="detailsSim2" class="bg-gray-50 rounded-lg p-4 shadow"></div>
+                            <div class="flex justify-center mt-4">
+                                <button id="btnValiderPret2"
+                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg shadow-lg hover-scale transition-all duration-300">Valider
+                                    comme prêt</button>
+                            </div>
+                            <div id="messageValidation2" class="mt-2 text-center"></div>
                         </div>
                     </div>
                 </div>
@@ -234,6 +246,75 @@
         document.getElementById('selectSim2').addEventListener('change', function () {
             afficherDetails(this.value, 'detailsSim2');
         });
+        // Validation individuelle
+        document.getElementById('btnValiderPret1').onclick = function () {
+            const id1 = document.getElementById('selectSim1').value;
+            if (!id1) {
+                document.getElementById('messageValidation1').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Veuillez choisir une simulation à valider.</div>';
+                return;
+            }
+            const sim1 = simulations.find(s => s.id_simulation == id1);
+            if (!sim1) return;
+            const data1 = {
+                id_types_pret: sim1.id_types_pret,
+                id_clients: sim1.id_clients,
+                montant_prets: sim1.montant_prets,
+                date_debut: sim1.date_debut,
+                duree_en_mois: sim1.duree_en_mois,
+                pourcentage_assurance: sim1.pourcentage_assurance,
+                delai_premier_remboursement: sim1.delai_premier_remboursement
+            };
+            fetch(`${API_BASE}/prets`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data1)
+            })
+                .then(res => res.json().then(json => ({ ok: res.ok, json })))
+                .then(({ ok, json }) => {
+                    if (ok) {
+                        document.getElementById('messageValidation1').innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded">Le prêt a été créé avec succès !</div>';
+                    } else {
+                        document.getElementById('messageValidation1').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de la création du prêt.<br>' + (json.message || '') + '</div>';
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('messageValidation1').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de la création du prêt.</div>';
+                });
+        };
+        document.getElementById('btnValiderPret2').onclick = function () {
+            const id2 = document.getElementById('selectSim2').value;
+            if (!id2) {
+                document.getElementById('messageValidation2').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Veuillez choisir une simulation à valider.</div>';
+                return;
+            }
+            const sim2 = simulations.find(s => s.id_simulation == id2);
+            if (!sim2) return;
+            const data2 = {
+                id_types_pret: sim2.id_types_pret,
+                id_clients: sim2.id_clients,
+                montant_prets: sim2.montant_prets,
+                date_debut: sim2.date_debut,
+                duree_en_mois: sim2.duree_en_mois,
+                pourcentage_assurance: sim2.pourcentage_assurance,
+                delai_premier_remboursement: sim2.delai_premier_remboursement
+            };
+            fetch(`${API_BASE}/prets`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data2)
+            })
+                .then(res => res.json().then(json => ({ ok: res.ok, json })))
+                .then(({ ok, json }) => {
+                    if (ok) {
+                        document.getElementById('messageValidation2').innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded">Le prêt a été créé avec succès !</div>';
+                    } else {
+                        document.getElementById('messageValidation2').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de la création du prêt.<br>' + (json.message || '') + '</div>';
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('messageValidation2').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de la création du prêt.</div>';
+                });
+        };
     </script>
 </body>
 
