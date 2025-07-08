@@ -3,52 +3,305 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Simulateur de Prêt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNI Madagascar - Simulateur de Prêt</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f766e 0%, #059669 50%, #10b981 100%);
+        }
+
+        .sidebar-gradient {
+            background: linear-gradient(180deg, #0f766e 0%, #134e4a 100%);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hover-scale {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-scale:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .menu-item {
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(8px);
+        }
+
+        .dropdown-enter {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .dropdown-enter.open {
+            max-height: 200px;
+        }
+
+        .floating-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .currency-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+    </style>
 </head>
 
-<body class="bg-gray-50 min-h-screen">
-    <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
-        <h1 class="text-2xl font-bold mb-6 text-center">Simuler un Prêt</h1>
-        <form id="simulateurForm" class="space-y-4">
-            <div>
-                <label for="montant" class="block mb-1 font-medium">Montant du prêt (€)</label>
-                <input type="number" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2" id="montant"
-                    name="montant" required>
+<body class="gradient-bg min-h-screen">
+    <!-- Mobile Menu Button -->
+    <button id="mobile-menu-btn"
+        class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+        <svg class="w-6 h-6 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-40 bg-white shadow-xl border-b border-gray-200">
+        <div class="w-full px-4 sm:px-6 lg:pl-4 lg:pr-8">
+            <div class="flex items-center h-20">
+                <div class="flex items-center space-x-3 pl-4">
+                    <div
+                        class="w-12 h-12 bg-gradient-to-br from-red-500 via-teal-600 to-emerald-500 rounded-xl shadow-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">BNI</span>
+                    </div>
+                    <div class="text-2xl font-black text-teal-700 tracking-wide">BNI MADAGASCAR</div>
+                </div>
+                <div class="flex-grow"></div>
             </div>
-            <div>
-                <label for="typePret" class="block mb-1 font-medium">Type de prêt</label>
-                <select id="typePret" name="typePret" class="w-full border border-gray-300 rounded px-3 py-2"
-                    required></select>
+        </div>
+    </nav>
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="mobile-menu lg:hidden fixed top-0 left-0 h-full w-80 sidebar-gradient z-30 shadow-2xl">
+        <div class="pt-20 pb-6">
+            <div class="px-6 mb-8">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-red-500 via-teal-600 to-emerald-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xs">BNI</span>
+                    </div>
+                    <div class="text-white font-bold text-lg">MENU</div>
+                </div>
             </div>
-            <div>
-                <label for="duree" class="block mb-1 font-medium">Durée (mois)</label>
-                <input type="number" class="w-full border border-gray-300 rounded px-3 py-2" id="duree" name="duree"
-                    required>
-            </div>
-            <div>
-                <label for="assurance" class="block mb-1 font-medium">Assurance mensuelle (%)</label>
-                <input type="number" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2" id="assurance"
-                    name="assurance">
-            </div>
-            <div>
-                <label for="delai" class="block mb-1 font-medium">Délai avant 1er remboursement (mois)</label>
-                <input type="number" class="w-full border border-gray-300 rounded px-3 py-2" id="delai" name="delai"
-                    value="0">
-            </div>
-            <div class="flex gap-2">
-                <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded transition">Simuler</button>
-                <a href="../../index.html"
-                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded transition">Retour</a>
-            </div>
-        </form>
-        <div id="resultat" class="mt-6"></div>
+        </div>
     </div>
+    <!-- Sidebar -->
+    <div class="fixed top-20 left-0 w-72 h-full sidebar-gradient shadow-2xl z-20 hidden lg:block">
+        <div class="p-6 space-y-2">
+            <a href="insertionFonds.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl bg-white bg-opacity-20 text-white group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">FONDS ACTUELS</div>
+                    <div class="text-sm text-teal-100 opacity-75">Gérer vos fonds</div>
+                </div>
+            </a>
+            <a href="listePrets.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white hover:bg-white hover:bg-opacity-10 group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">PRÊTS</div>
+                    <div class="text-sm text-teal-100 opacity-75">Demandes de prêts</div>
+                </div>
+            </a>
+            <a href="simulateurPret.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white hover:bg-white hover:bg-opacity-10 group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14.5v-5h2l-3-4-3 4h2v5h2z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">SIMULATEUR</div>
+                    <div class="text-sm text-teal-100 opacity-75">Simuler un prêt</div>
+                </div>
+            </a>
+            <a href="interet.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white hover:bg-white hover:bg-opacity-10 group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">STATISTIQUES</div>
+                    <div class="text-sm text-teal-100 opacity-75">Intérêts gagnés</div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="lg:ml-72 mt-20 min-h-screen">
+        <div class="p-6 lg:p-8">
+            <div class="floating-card rounded-2xl shadow-2xl mb-8 overflow-hidden max-w-xl mx-auto">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 p-8">
+                    <div class="text-white">
+                        <h1 class="text-4xl font-bold mb-2">Simuler un Prêt</h1>
+                        <p class="text-xl text-teal-100">Calculez vos mensualités et le coût total</p>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <form id="simulateurForm" class="space-y-6">
+                        <div>
+                            <label for="montant" class="block text-gray-700 font-semibold mb-2">Montant du prêt
+                                (€)</label>
+                            <input type="number" step="0.01"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800"
+                                id="montant" name="montant" required>
+                        </div>
+                        <div>
+                            <label for="typePret" class="block text-gray-700 font-semibold mb-2">Type de prêt</label>
+                            <select id="typePret" name="typePret"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800"
+                                required></select>
+                        </div>
+                        <div>
+                            <label for="duree" class="block text-gray-700 font-semibold mb-2">Durée (mois)</label>
+                            <input type="number"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800"
+                                id="duree" name="duree" required>
+                        </div>
+                        <div>
+                            <label for="assurance" class="block text-gray-700 font-semibold mb-2">Assurance mensuelle
+                                (%)</label>
+                            <input type="number" step="0.01"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800"
+                                id="assurance" name="assurance">
+                        </div>
+                        <div>
+                            <label for="delai" class="block text-gray-700 font-semibold mb-2">Délai avant 1er
+                                remboursement (mois)</label>
+                            <input type="number"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800"
+                                id="delai" name="delai" value="0">
+                        </div>
+                        <div class="flex gap-4">
+                            <button type="submit" id="btnCalculer"
+                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover-scale transition-all duration-300">Calculer</button>
+                            <button type="button" id="btnValider"
+                                class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover-scale transition-all duration-300">Valider</button>
+                            <button type="button" id="btnEnregistrer"
+                                class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover-scale transition-all duration-300">Enregistrer
+                                simulation</button>
+                            <a href="../../index.html"
+                                class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-6 py-3 rounded-lg text-center transition-all duration-300">Retour</a>
+                        </div>
+                    </form>
+                    <div id="resultat" class="mt-6"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Currency Rates Footer -->
+    <div
+        class="fixed bottom-0 left-0 right-0 lg:left-72 bg-gradient-to-r from-teal-700 to-teal-800 text-white shadow-2xl border-t border-teal-600">
+        <div class="flex flex-col sm:flex-row items-center justify-between p-4 space-y-4 sm:space-y-0">
+            <div class="flex items-center space-x-6">
+                <div class="font-bold text-lg">COURS DE DEVISES</div>
+                <div class="flex space-x-8">
+                    <div class="text-center currency-pulse">
+                        <div class="font-bold text-lg">EURO</div>
+                        <div class="text-emerald-300 font-semibold">5 044,10 Ar</div>
+                    </div>
+                    <div class="text-center currency-pulse">
+                        <div class="font-bold text-lg">USD</div>
+                        <div class="text-emerald-300 font-semibold">4 464,77 Ar</div>
+                    </div>
+                </div>
+                <div class="text-sm text-teal-200">Mis à jour le 2025-04-30</div>
+            </div>
+            <button
+                class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover-scale transition-all duration-300 flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                <span>TROUVER UNE AGENCE</span>
+            </button>
+        </div>
+    </div>
+    <script src="../../config.js"></script>
     <script>
+        // Dropdown functionality
+        function toggleDropdown(element) {
+            const dropdown = element.parentElement;
+            const menu = dropdown.querySelector('.dropdown-enter');
+            const arrow = dropdown.querySelector('.dropdown-arrow');
+            menu.classList.toggle('open');
+            arrow.classList.toggle('rotate-180');
+        }
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-enter').forEach(menu => { menu.classList.remove('open'); });
+                document.querySelectorAll('.dropdown-arrow').forEach(arrow => { arrow.classList.remove('rotate-180'); });
+            }
+        });
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', function () { mobileMenu.classList.toggle('open'); });
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('#mobile-menu') && !e.target.closest('#mobile-menu-btn')) {
+                mobileMenu.classList.remove('open');
+            }
+        });
         // Charger les types de prêt et les taux associés
         let tauxByType = {};
-        fetch('http://localhost/s4-final/ws/typespret')
+        fetch(`${API_BASE}/typespret`)
             .then(res => res.json())
             .then(types => {
                 const select = document.getElementById('typePret');
@@ -59,7 +312,7 @@
                     select.appendChild(option);
                 });
                 // Charger les taux après les types
-                fetch('http://localhost/s4-final/ws/taux')
+                fetch(`${API_BASE}/taux`)
                     .then(res => res.json())
                     .then(tauxList => {
                         tauxList.forEach(taux => {
@@ -72,8 +325,18 @@
         document.getElementById('typePret').addEventListener('change', function () {
             const idType = this.value;
             const taux = tauxByType[idType] || '';
-            document.getElementById('taux').value = taux;
+            // document.getElementById('taux').value = taux; // plus de champ taux
         });
+        function getFormData() {
+            return {
+                id_types_pret: document.getElementById('typePret').value,
+                montant_prets: document.getElementById('montant').value,
+                date_debut: new Date().toISOString().slice(0, 10),
+                duree_en_mois: document.getElementById('duree').value,
+                pourcentage_assurance: document.getElementById('assurance').value || null,
+                delai_premier_remboursement: document.getElementById('delai').value || null
+            };
+        }
         document.getElementById('simulateurForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const montant = parseFloat(document.getElementById('montant').value);
@@ -82,7 +345,7 @@
             const duree = parseInt(document.getElementById('duree').value);
             const assurance = parseFloat(document.getElementById('assurance').value) || 0;
             const delai = parseInt(document.getElementById('delai').value) || 0;
-            fetch('http://localhost/s4-final/ws/simulateurpret', {
+            fetch(`${API_BASE}/simulateurpret`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ montant, taux, duree, assurance, delai })
@@ -97,6 +360,49 @@
                 `;
                 });
         });
+        document.getElementById('btnValider').onclick = function () {
+            const data = getFormData();
+            // 1. Enregistrer la simulation
+            fetch(`${API_BASE}/simulations`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(() => {
+                    // 2. Enregistrer le prêt
+                    fetch(`${API_BASE}/prets`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            document.getElementById('resultat').innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded">Simulation et prêt enregistrés avec succès !</div>';
+                        })
+                        .catch(() => {
+                            document.getElementById('resultat').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de l\'enregistrement du prêt.</div>';
+                        });
+                })
+                .catch(() => {
+                    document.getElementById('resultat').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de l\'enregistrement de la simulation.</div>';
+                });
+        };
+        document.getElementById('btnEnregistrer').onclick = function () {
+            const data = getFormData();
+            fetch(`${API_BASE}/simulations`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    document.getElementById('resultat').innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded">Simulation enregistrée avec succès !</div>';
+                })
+                .catch(() => {
+                    document.getElementById('resultat').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de l\'enregistrement de la simulation.</div>';
+                });
+        };
     </script>
 </body>
 

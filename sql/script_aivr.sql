@@ -77,6 +77,7 @@ CREATE TABLE Type_transactions(
     id_type_transactions INT AUTO_INCREMENT PRIMARY KEY,
     nom_type_transactions VARCHAR(50) NOT NULL UNIQUE
 );
+INSERT INTO Type_transactions ('Depot')
 
 -- Table pour détailler les mouvements de fonds
 CREATE TABLE Details_fonds(
@@ -108,3 +109,16 @@ CREATE TABLE Echeances (
 ALTER TABLE Prets
 ADD pourcentage_assurance DECIMAL(5, 2) NULL, -- Pourcentage d'assurance, peut être NULL
 ADD delai_premier_remboursement INT NULL; -- Délai en mois pour le 1er remboursement (S4 INFO uniquement)
+
+-- Table pour stocker les paramètres des simulations
+CREATE TABLE Simulations (
+    id_simulation INT AUTO_INCREMENT PRIMARY KEY,
+    id_types_pret INT NOT NULL,
+    montant_prets DECIMAL(15, 2) NOT NULL,
+    date_debut DATE NOT NULL,
+    duree_en_mois INT NOT NULL,
+    pourcentage_assurance DECIMAL(5, 2) NULL,
+    delai_premier_remboursement INT NULL,
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_types_pret) REFERENCES Types_pret(id_types_pret)
+);

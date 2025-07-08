@@ -3,65 +3,270 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Liste des Prêts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNI Madagascar - Liste des Prêts</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
         body {
-          font-family: sans-serif;
-          padding: 20px;
+            font-family: 'Inter', sans-serif;
         }
-    
-        input,
-        button {
-          margin: 5px;
-          padding: 5px;
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f766e 0%, #059669 50%, #10b981 100%);
         }
-    
-        table {
-          border-collapse: collapse;
-          width: 100%;
-          margin-top: 20px;
+
+        .sidebar-gradient {
+            background: linear-gradient(180deg, #0f766e 0%, #134e4a 100%);
         }
-    
-        th,
-        td {
-          border: 1px solid #ccc;
-          padding: 8px;
-          text-align: left;
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-    
-        th {
-          background-color: #f2f2f2;
+
+        .hover-scale {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-      </style>
+
+        .hover-scale:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .menu-item {
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(8px);
+        }
+
+        .dropdown-enter {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .dropdown-enter.open {
+            max-height: 200px;
+        }
+
+        .floating-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .currency-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+    </style>
 </head>
 
-<body class="bg-gray-50 min-h-screen">
-    <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded shadow">
-        <h1 class="text-2xl font-bold mb-6 text-center">Liste des Prêts</h1>
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-200" id="pretsTable">
-                <thead>
-                    <tr class="bg-gray-100 text-gray-700">
-                        <th class="py-2 px-4 border-b">ID</th>
-                        <th class="py-2 px-4 border-b">Type de prêt</th>
-                        <th class="py-2 px-4 border-b">Client</th>
-                        <th class="py-2 px-4 border-b">Montant</th>
-                        <th class="py-2 px-4 border-b">Date début</th>
-                        <th class="py-2 px-4 border-b">Durée (mois)</th>
-                        <th class="py-2 px-4 border-b">Statut</th>
-                        <th class="py-2 px-4 border-b">Action</th>
-                        <th class="py-2 px-4 border-b">Exporter</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+<body class="gradient-bg min-h-screen">
+    <!-- Mobile Menu Button -->
+    <button id="mobile-menu-btn"
+        class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+        <svg class="w-6 h-6 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-40 bg-white shadow-xl border-b border-gray-200">
+        <div class="w-full px-4 sm:px-6 lg:pl-4 lg:pr-8">
+            <div class="flex items-center h-20">
+                <div class="flex items-center space-x-3 pl-4">
+                    <div
+                        class="w-12 h-12 bg-gradient-to-br from-red-500 via-teal-600 to-emerald-500 rounded-xl shadow-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">BNI</span>
+                    </div>
+                    <div class="text-2xl font-black text-teal-700 tracking-wide">BNI MADAGASCAR</div>
+                </div>
+                <div class="flex-grow"></div>
+            </div>
         </div>
-        <div class="mt-6 text-center">
-            <a href="formPrets.html"
-                class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded transition">Ajouter
-                un prêt</a>
+    </nav>
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="mobile-menu lg:hidden fixed top-0 left-0 h-full w-80 sidebar-gradient z-30 shadow-2xl">
+        <div class="pt-20 pb-6">
+            <div class="px-6 mb-8">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-red-500 via-teal-600 to-emerald-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xs">BNI</span>
+                    </div>
+                    <div class="text-white font-bold text-lg">MENU</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sidebar -->
+    <div class="fixed top-20 left-0 w-72 h-full sidebar-gradient shadow-2xl z-20 hidden lg:block">
+        <div class="p-6 space-y-2">
+            <a href="insertionFonds.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl bg-white bg-opacity-20 text-white group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">FONDS ACTUELS</div>
+                    <div class="text-sm text-teal-100 opacity-75">Gérer vos fonds</div>
+                </div>
+            </a>
+            <a href="listePrets.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white hover:bg-white hover:bg-opacity-10 group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">PRÊTS</div>
+                    <div class="text-sm text-teal-100 opacity-75">Demandes de prêts</div>
+                </div>
+            </a>
+            <a href="simulateurPret.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white hover:bg-white hover:bg-opacity-10 group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14.5v-5h2l-3-4-3 4h2v5h2z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">SIMULATEUR</div>
+                    <div class="text-sm text-teal-100 opacity-75">Simuler un prêt</div>
+                </div>
+            </a>
+            <div class="dropdown">
+                <button onclick="toggleDropdown(this)"
+                    class="menu-item w-full flex items-center justify-between p-4 rounded-xl text-white hover:bg-white hover:bg-opacity-10 group">
+                    <div class="flex items-center space-x-4">
+                        <div
+                            class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-semibold">STATISTIQUES</div>
+                            <div class="text-sm text-teal-100 opacity-75">Analyses et rapports</div>
+                        </div>
+                    </div>
+                    <svg class="w-5 h-5 transition-transform duration-300 dropdown-arrow" fill="currentColor"
+                        viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                </button>
+                <div class="dropdown-enter ml-6 mt-2 space-y-1">
+                    <a href="interet.html"
+                        class="menu-item flex items-center space-x-3 p-3 rounded-lg text-teal-100 hover:bg-white hover:bg-opacity-10">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
+                        </svg>
+                        <span class="font-medium">INTÉRÊTS</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="lg:ml-72 mt-20 min-h-screen">
+        <div class="p-6 lg:p-8">
+            <div class="floating-card rounded-2xl shadow-2xl mb-8 overflow-hidden">
+                <div
+                    class="bg-gradient-to-r from-teal-600 to-emerald-600 p-8 flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div class="text-white">
+                        <h1 class="text-4xl font-bold mb-2">Liste des Prêts</h1>
+                        <p class="text-xl text-teal-100">Consultez et gérez les demandes de prêt</p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <a href="formPrets.html"
+                            class="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition text-lg">Ajouter
+                            un prêt</a>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-200" id="pretsTable">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-700">
+                                    <th class="py-2 px-4 border-b">ID</th>
+                                    <th class="py-2 px-4 border-b">Type de prêt</th>
+                                    <th class="py-2 px-4 border-b">Client</th>
+                                    <th class="py-2 px-4 border-b">Montant</th>
+                                    <th class="py-2 px-4 border-b">Date début</th>
+                                    <th class="py-2 px-4 border-b">Durée (mois)</th>
+                                    <th class="py-2 px-4 border-b">Statut</th>
+                                    <th class="py-2 px-4 border-b">Action</th>
+                                    <th class="py-2 px-4 border-b">Exporter</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Currency Rates Footer -->
+    <div
+        class="fixed bottom-0 left-0 right-0 lg:left-72 bg-gradient-to-r from-teal-700 to-teal-800 text-white shadow-2xl border-t border-teal-600">
+        <div class="flex flex-col sm:flex-row items-center justify-between p-4 space-y-4 sm:space-y-0">
+            <div class="flex items-center space-x-6">
+                <div class="font-bold text-lg">COURS DE DEVISES</div>
+                <div class="flex space-x-8">
+                    <div class="text-center currency-pulse">
+                        <div class="font-bold text-lg">EURO</div>
+                        <div class="text-emerald-300 font-semibold">5 044,10 Ar</div>
+                    </div>
+                    <div class="text-center currency-pulse">
+                        <div class="font-bold text-lg">USD</div>
+                        <div class="text-emerald-300 font-semibold">4 464,77 Ar</div>
+                    </div>
+                </div>
+                <div class="text-sm text-teal-200">Mis à jour le 2025-04-30</div>
+            </div>
+            <button
+                class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover-scale transition-all duration-300 flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                <span>TROUVER UNE AGENCE</span>
+            </button>
         </div>
     </div>
     <script src="../../config.js"></script>
@@ -145,7 +350,6 @@
                     tbody.appendChild(tr);
                 });
             });
-
         function exporterPret(id_prets) {
             window.open(`/s4-final/views/exports/pret.php?id_prets=${id_prets}`, '_blank');
         }

@@ -69,11 +69,6 @@ class Fonds {
             $stmt = $db->prepare("INSERT INTO Fonds (montant_fonds) VALUES (?)");
             $stmt->execute([$data->montant_fonds]);
             $id_fonds = $db->lastInsertId();
-            
-            // Suppression de l'insertion automatique dans Details_fonds
-            // $stmt = $db->prepare("INSERT INTO Details_fonds (id_fonds, id_type_transactions, date_details) VALUES (?, 1, NOW())");
-            // $stmt->execute([$id_fonds]);
-            
             $db->commit();
             return $id_fonds;
         } catch (Exception $e) {
