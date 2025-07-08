@@ -63,56 +63,51 @@
     <!-- Sidebar -->
     <div class="fixed top-20 left-0 w-72 h-full sidebar-gradient shadow-2xl z-20 hidden lg:block">
         <div class="p-6 space-y-2">
-            <a href="../fonds/insertionFonds.html"
-                class="menu-item flex items-center space-x-4 p-4 rounded-xl bg-white bg-opacity-20 text-white group">
-                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all duration-300">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                    </svg>
+            <a href="../fonds/insertionFonds.html" class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white">
+                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
                 </div>
-                <div>
-                    <div class="font-semibold">FONDS ACTUELS</div>
-                    <div class="text-sm text-teal-100 opacity-75">Gérer vos fonds</div>
-                </div>
+                <div><div class="font-semibold">FONDS ACTUELS</div><div class="text-sm text-teal-100 opacity-75">Gérer vos fonds</div></div>
             </a>
-            <a href="../prets/listePrets.html"
-                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white hover:bg-white hover:bg-opacity-10 group">
-                <div class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
-                    </svg>
+            <a href="../prets/listePrets.html" class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white">
+                <div class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
                 </div>
-                <div>
-                    <div class="font-semibold">PRÊTS</div>
-                    <div class="text-sm text-teal-100 opacity-75">Demandes de prêts</div>
-                </div>
+                <div><div class="font-semibold">PRÊTS</div><div class="text-sm text-teal-100 opacity-75">Demandes de prêts</div></div>
             </a>
-            <a href="../prets/simulateurPret.html"
-                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white hover:bg-white hover:bg-opacity-10 group">
-                <div class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14.5v-5h2l-3-4-3 4h2v5h2z" />
-                    </svg>
+            <a href="../prets/simulateurPret.html" class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white">
+                <div class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14.5v-5h2l-3-4-3 4h2v5h2z"/></svg>
                 </div>
-                <div>
-                    <div class="font-semibold">SIMULATEUR</div>
-                    <div class="text-sm text-teal-100 opacity-75">Simuler un prêt</div>
-                </div>
+                <div><div class="font-semibold">SIMULATEUR</div><div class="text-sm text-teal-100 opacity-75">Simuler un prêt</div></div>
             </a>
-            <a href="interets_gagnes.php"
-                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white hover:bg-white hover:bg-opacity-10 group">
-                <div class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
-                    </svg>
+            <a href="../prets/comparaisonSimulations.html" class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white">
+                <div class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17h18M6 10h12M9 3h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
                 </div>
-                <div>
-                    <div class="font-semibold">STATISTIQUES</div>
-                    <div class="text-sm text-teal-100 opacity-75">Intérêts gagnés</div>
+                <div><div class="font-semibold">COMPARER SIMULATIONS</div><div class="text-sm text-teal-100 opacity-75">Comparer plusieurs simulations</div></div>
+            </a>
+            <a href="interets_gagnes.php" class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white">
+                <div class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
                 </div>
+                <div><div class="font-semibold">STATISTIQUES</div><div class="text-sm text-teal-100 opacity-75">Intérêts gagnés</div></div>
+            </a>
+            <a href="statistiqueMontants.html" class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white">
+                <div class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                </div>
+                <div><div class="font-semibold">MONTANTS PAR MOIS</div><div class="text-sm text-teal-100 opacity-75">Fonds disponibles mensuels</div></div>
             </a>
         </div>
     </div>
+    <script>
+    document.querySelectorAll('.menu-item').forEach(link => {
+      if (link.href && window.location.href.split(/[?#]/)[0].endsWith(link.getAttribute('href'))) {
+        link.classList.add('bg-white', 'bg-opacity-30', 'text-teal-700', 'font-bold');
+      }
+    });
+    </script>
     <!-- Main Content -->
     <div class="lg:ml-72 mt-20 min-h-screen">
         <div class="p-6 lg:p-8">
