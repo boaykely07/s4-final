@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../controllers/EtudiantController.php';
 require_once __DIR__ . '/../controllers/FondsController.php';
+require_once __DIR__ . '/../controllers/TauxController.php';
 
 Flight::route('GET /etudiants', ['EtudiantController', 'getAll']);
 Flight::route('POST /fonds', ['FondsController', 'create']);
@@ -22,5 +23,13 @@ Flight::route('DELETE /prets/@id', ['PretsController', 'delete']);
 // Types de prêt (pour listes déroulantes)
 Flight::route('GET /typespret', ['TypesPretController', 'getAll']);
 
+// Taux (pour listes déroulantes)
+Flight::route('GET /taux', ['TauxController', 'getAll']);
+
 // Clients (pour listes déroulantes)
 Flight::route('GET /clients', ['ClientsController', 'getAll']);
+Flight::route('POST /prets/valider/@id', ['PretsController', 'valider']);
+Flight::route('POST /prets/annuler/@id', ['PretsController', 'annuler']);
+
+// Simulation de prêt (API)
+Flight::route('POST /simulateurpret', ['PretsController', 'simulate']);

@@ -20,6 +20,8 @@
                         <th class="py-2 px-4 border-b">Montant</th>
                         <th class="py-2 px-4 border-b">Date début</th>
                         <th class="py-2 px-4 border-b">Durée (mois)</th>
+                        <th class="py-2 px-4 border-b">Statut</th>
+                        <th class="py-2 px-4 border-b">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,6 +36,18 @@
     </div>
     <script src="../../config.js"></script>
     <script>
+        function validerPret(id) {
+            fetch(`${API_BASE}/prets/valider/${id}`, { method: 'POST' })
+                .then(res => res.json())
+                .then(res => { alert(res.message || 'Prêt validé !'); location.reload(); })
+                .catch(() => alert('Erreur lors de la validation du prêt.'));
+        }
+        function annulerPret(id) {
+            fetch(`${API_BASE}/prets/annuler/${id}`, { method: 'POST' })
+                .then(res => res.json())
+                .then(res => { alert(res.message || 'Prêt annulé !'); location.reload(); })
+                .catch(() => alert('Erreur lors de l\'annulation du prêt.'));
+        }
         fetch(`${API_BASE}/prets`)
             .then(res => res.json())
             .then(data => {
@@ -48,6 +62,11 @@
                         <td class='py-2 px-4 border-b text-center'>${pret.montant_prets}</td>
                         <td class='py-2 px-4 border-b text-center'>${pret.date_debut}</td>
                         <td class='py-2 px-4 border-b text-center'>${pret.duree_en_mois}</td>
+                        <td class='py-2 px-4 border-b text-center'>${pret.nom_status || ''}</td>
+                        <td class='py-2 px-4 border-b text-center'>
+                            <button onclick="validerPret(${pret.id_prets})" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded mr-2">Valider</button>
+                            <button onclick="annulerPret(${pret.id_prets})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">Annuler</button>
+                        </td>
                     `;
                     tbody.appendChild(tr);
                 });

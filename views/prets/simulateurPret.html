@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Simulateur de Prêt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
+        <h1 class="text-2xl font-bold mb-6 text-center">Simuler un Prêt</h1>
+        <form id="simulateurForm" class="space-y-4">
+            <div>
+                <label for="montant" class="block mb-1 font-medium">Montant du prêt (€)</label>
+                <input type="number" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2" id="montant"
+                    name="montant" required>
+            </div>
+            <div>
+                <label for="typePret" class="block mb-1 font-medium">Type de prêt</label>
+                <select id="typePret" name="typePret" class="w-full border border-gray-300 rounded px-3 py-2"
+                    required></select>
+            </div>
+            <div>
+                <label for="duree" class="block mb-1 font-medium">Durée (mois)</label>
+                <input type="number" class="w-full border border-gray-300 rounded px-3 py-2" id="duree" name="duree"
+                    required>
+            </div>
+            <div>
+                <label for="assurance" class="block mb-1 font-medium">Assurance mensuelle (%)</label>
+                <input type="number" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2" id="assurance"
+                    name="assurance">
+            </div>
+            <div>
+                <label for="delai" class="block mb-1 font-medium">Délai avant 1er remboursement (mois)</label>
+                <input type="number" class="w-full border border-gray-300 rounded px-3 py-2" id="delai" name="delai"
+                    value="0">
+            </div>
+            <div class="flex gap-2">
+                <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded transition">Simuler</button>
+                <a href="../../index.html"
+                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded transition">Retour</a>
+            </div>
+        </form>
+        <div id="resultat" class="mt-6"></div>
+    </div>
+    <script>
+        // Charger les types de prêt et les taux associés
+        let tauxByType = {};
+        fetch('http://localhost/s4-final/ws/typespret')
+            .then(res => res.json())
+            .then(types => {
+                const select = document.getElementById('typePret');
+                types.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type.id_types_pret;
+                    option.textContent = type.nom_type_pret;
+                    select.appendChild(option);
+                });
+                // Charger les taux après les types
+                fetch('http://localhost/s4-final/ws/taux')
+                    .then(res => res.json())
+                    .then(tauxList => {
+                        tauxList.forEach(taux => {
+                            tauxByType[taux.id_types_pret] = taux.pourcentage;
+                        });
+                        // Met à jour le taux au chargement
+                        select.dispatchEvent(new Event('change'));
+                    });
+            });
+        document.getElementById('typePret').addEventListener('change', function () {
+            const idType = this.value;
+            const taux = tauxByType[idType] || '';
+            document.getElementById('taux').value = taux;
+        });
+        document.getElementById('simulateurForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const montant = parseFloat(document.getElementById('montant').value);
+            const idType = document.getElementById('typePret').value;
+            const taux = parseFloat(tauxByType[idType] || 0);
+            const duree = parseInt(document.getElementById('duree').value);
+            const assurance = parseFloat(document.getElementById('assurance').value) || 0;
+            const delai = parseInt(document.getElementById('delai').value) || 0;
+            fetch('http://localhost/s4-final/ws/simulateurpret', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ montant, taux, duree, assurance, delai })
+            })
+                .then(res => res.json())
+                .then(res => {
+                    document.getElementById('resultat').innerHTML = `
+                    <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded mb-2">Mensualité (hors assurance) : <b>${res.annuite} €</b></div>
+                    <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded mb-2">Assurance mensuelle : <b>${res.assurance_mensuelle} €</b></div>
+                    <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-2">Montant à payer chaque mois : <b>${res.mensualite_totale} €</b></div>
+                    <div class="bg-gray-100 text-gray-800 px-4 py-2 rounded">Coût total du prêt (avec assurance) : <b>${res.cout_total} €</b></div>
+                `;
+                });
+        });
+    </script>
+</body>
+
+</html>

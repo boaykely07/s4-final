@@ -6,6 +6,7 @@ require_once __DIR__ . '/../models/DetailsFonds.php';
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers/Utils.php';
 require_once __DIR__ . '/EcheancesController.php';
+require_once __DIR__ . '/../models/MouvementPrets.php';
 
 class PretsController {
     public static function getAll() {
@@ -23,13 +24,13 @@ class PretsController {
         $pret_id = Prets::create($data);
 
         $db = getDB();
-        // 1. Trouver le statut 'Approuvé'
-        $stmt = $db->prepare("SELECT id_status_prets FROM Status_prets WHERE nom_status = 'Approuvé' LIMIT 1");
+        // 1. Trouver le statut 'En attente'
+        $stmt = $db->prepare("SELECT id_status_prets FROM Status_prets WHERE nom_status = 'En attente' LIMIT 1");
         $stmt->execute();
         $row = $stmt->fetch();
-        $id_status_prets = $row ? $row['id_status_prets'] : 2;
+        $id_status_prets = $row ? $row['id_status_prets'] : 1;
 
-        // 2. Insérer dans Mouvement_prets (statut Approuvé)
+        // 2. Insérer dans Mouvement_prets (statut En attente)
         MouvementPrets::create((object)[
             'id_prets' => $pret_id,
             'id_status_prets' => $id_status_prets,
@@ -53,10 +54,6 @@ class PretsController {
             'id_prets' => $pret_id
         ]);
 
-        // 6. Générer les échéances automatiquement
-        
-        EcheancesController::generateForPret($pret_id);
-
         Flight::json(['message' => 'Prêt ajouté', 'id' => $pret_id]);
     }
 
@@ -69,5 +66,84 @@ class PretsController {
     public static function delete($id) {
         Prets::delete($id);
         Flight::json(['message' => 'Prêt supprimé']);
+    }
+
+    public static function valider($id) {
+        $db = getDB();
+        // Trouver le statut 'Approuvé'
+        $stmt = $db->prepare("SELECT id_status_prets FROM Status_prets WHERE nom_status = 'Approuvé' LIMIT 1");
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $id_status_prets = $row ? $row['id_status_prets'] : 2;
+        // Insérer dans Mouvement_prets
+        MouvementPrets::create((object)[
+            'id_prets' => $id,
+            'id_status_prets' => $id_status_prets,
+            'date_mouvement' => date('Y-m-d')
+        ]);
+        // Générer les échéances automatiquement à la validation
+        EcheancesController::generateForPret($id);
+        Flight::json(['message' => 'Prêt validé !']);
+    }
+
+    public static function annuler($id) {
+        $db = getDB();
+        // Trouver le statut 'Rejeté'
+        $stmt = $db->prepare("SELECT id_status_prets FROM Status_prets WHERE nom_status = 'Rejeté' LIMIT 1");
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $id_status_prets = $row ? $row['id_status_prets'] : 3;
+        // Insérer dans Mouvement_prets
+        MouvementPrets::create((object)[
+            'id_prets' => $id,
+            'id_status_prets' => $id_status_prets,
+            'date_mouvement' => date('Y-m-d')
+        ]);
+        Flight::json(['message' => 'Prêt annulé !']);
+    }
+
+    // Calcule l'annuité constante (hors assurance)
+    public static function calculerAnnuite($montant, $taux_annuel, $duree) {
+        $r = $taux_annuel / 12 / 100;
+        if ($r > 0) {
+            $annuite = $montant * ($r * pow(1 + $r, $duree)) / (pow(1 + $r, $duree) - 1);
+        } else {
+            $annuite = $montant / $duree;
+        }
+        return round($annuite, 2);
+    }
+
+    // Calcule l'assurance mensuelle
+    public static function calculerAssuranceMensuelle($montant, $assurance) {
+        return round($montant * $assurance / 100, 2);
+    }
+
+    // Calcule la mensualité totale (annuité + assurance)
+    public static function calculerMensualiteTotale($annuite, $assurance_mensuelle) {
+        return round($annuite + $assurance_mensuelle, 2);
+    }
+
+    // Calcule le coût total du prêt (mensualité totale * durée)
+    public static function calculerCoutTotal($mensualite_totale, $duree) {
+        return round($mensualite_totale * $duree, 2);
+    }
+
+    // Simulation d'un prêt (API)
+    public static function simulate() {
+        $data = Flight::request()->data;
+        $montant = floatval($data->montant);
+        $taux = floatval($data->taux);
+        $duree = intval($data->duree);
+        $assurance = isset($data->assurance) ? floatval($data->assurance) : 0;
+        $annuite = self::calculerAnnuite($montant, $taux, $duree);
+        $assurance_mensuelle = self::calculerAssuranceMensuelle($montant, $assurance);
+        $mensualite_totale = self::calculerMensualiteTotale($annuite, $assurance_mensuelle);
+        $cout_total = self::calculerCoutTotal($mensualite_totale, $duree);
+        Flight::json([
+            'annuite' => $annuite,
+            'assurance_mensuelle' => $assurance_mensuelle,
+            'mensualite_totale' => $mensualite_totale,
+            'cout_total' => $cout_total
+        ]);
     }
 } 

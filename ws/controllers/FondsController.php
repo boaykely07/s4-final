@@ -51,4 +51,4 @@ class FondsController {
             Flight::json(['error' => $e->getMessage()], 500);
         }
     }
-} 
+}
