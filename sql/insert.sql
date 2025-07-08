@@ -7,13 +7,13 @@ INSERT INTO Types_pret (nom_type_pret) VALUES
 -- Statuts de prêts
 INSERT INTO Status_prets (nom_status) VALUES
 ('En attente'),
-('Approuvé'),
-('Rejeté'),
+('Approuve'),
+('Rejete'),
 ('Remboursé');
 
 -- Types de transactions
 INSERT INTO Type_transactions (nom_type_transactions) VALUES
-('Dépôt'),
+('Depot'),
 ('Retrait');
 
 -- Clients

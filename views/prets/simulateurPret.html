@@ -229,6 +229,12 @@
                                 class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800"
                                 id="delai" name="delai" value="0">
                         </div>
+                        <div>
+                            <label for="client" class="block text-gray-700 font-semibold mb-2">Client</label>
+                            <select id="client" name="client"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800"
+                                required></select>
+                        </div>
                         <div class="flex gap-4">
                             <button type="submit" id="btnCalculer"
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover-scale transition-all duration-300">Calculer</button>
@@ -322,6 +328,18 @@
                         select.dispatchEvent(new Event('change'));
                     });
             });
+        // Charger la liste des clients
+        fetch(`${API_BASE}/clients`)
+            .then(res => res.json())
+            .then(clients => {
+                const select = document.getElementById('client');
+                clients.forEach(client => {
+                    const option = document.createElement('option');
+                    option.value = client.id_clients;
+                    option.textContent = client.nom_clients + ' ' + client.prenom_clients;
+                    select.appendChild(option);
+                });
+            });
         document.getElementById('typePret').addEventListener('change', function () {
             const idType = this.value;
             const taux = tauxByType[idType] || '';
@@ -330,6 +348,7 @@
         function getFormData() {
             return {
                 id_types_pret: document.getElementById('typePret').value,
+                id_clients: document.getElementById('client').value,
                 montant_prets: document.getElementById('montant').value,
                 date_debut: new Date().toISOString().slice(0, 10),
                 duree_en_mois: document.getElementById('duree').value,
