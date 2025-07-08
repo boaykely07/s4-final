@@ -1,160 +1,439 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-  <meta charset="UTF-8">
-  <title>Gestion des étudiants</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNI Madagascar - Établissement Financier</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    input,
-    button {
-      margin: 5px;
-      padding: 5px;
-    }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e7b8c 0%, #4db6ac 100%);
+            min-height: 100vh;
+        }
 
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 20px;
-    }
+        /* Header/Navbar */
+        .navbar {
+            background: #ffffff;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
 
-    th,
-    td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            font-weight: 900;
+            color: #1e7b8c;
+            letter-spacing: 1px;
+        }
 
-    th {
-      background-color: #f2f2f2;
-    }
-  </style>
+        .logo-placeholder {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e53e3e 0%, #1e7b8c 50%, #4db6ac 100%);
+            margin-right: 12px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-placeholder::before {
+            content: 'BNI';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            background: #f0f8ff;
+            color: #1e7b8c;
+        }
+
+        .nav-menu .active {
+            color: #1e7b8c;
+            font-weight: 600;
+        }
+
+        .access-btn {
+            background: #e53e3e;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .access-btn:hover {
+            background: #c53030;
+            transform: translateY(-2px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 250px;
+            height: calc(100vh - 80px);
+            background: #1e7b8c;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 2px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-menu li:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 25px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .menu-icon {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-text {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255,255,255,0.1);
+            padding-left: 35px;
+        }
+
+        .sidebar-menu .active {
+            background: rgba(255,255,255,0.2);
+            border-left: 4px solid #4db6ac;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+        }
+
+        .dropdown-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown.open .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(255, 254, 254, 0.2);
+        }
+
+        .dropdown.open .dropdown-menu {
+            max-height: 200px;
+        }
+
+        .dropdown-menu a {
+            padding: 15px 25px 15px 45px;
+            font-size: 15px;
+            color: #e0f2f1;
+        }
+
+        .dropdown-menu .menu-icon {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(244, 239, 239, 0.1);
+            color: white;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 250px;
+            margin-top: 80px;
+            padding: 0;
+            height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 18px;
+            text-align: center;
+            border-radius: 0;
+        }
+
+        .image-placeholder::before {
+            content: '📷';
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* Currency rates footer */
+        .currency-rates {
+            position: fixed;
+            bottom: 0;
+            left: 250px;
+            right: 0;
+            background: #1e7b8c;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .rates-info {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .rate-item {
+            text-align: center;
+        }
+
+        .rate-item .currency {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .rate-item .value {
+            font-size: 14px;
+            color: #4db6ac;
+        }
+
+        .find-agency {
+            background: #e53e3e;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .find-agency:hover {
+            background: #c53030;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .main-content {
+                margin-left: 200px;
+                padding: 20px;
+            }
+            
+            .currency-rates {
+                left: 200px;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <div class="logo-placeholder"></div>
+            BNI MADAGASCAR
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#" class="active">PARTICULIER</a></li>
+            <li><a href="#">PROFESSIONNEL</a></li>
+            <li><a href="#">ENTREPRISE</a></li>
+            <li><a href="#">INSTITUTION</a></li>
+        </ul>
+        <button class="access-btn">ACCEDER A MES COMPTES</button>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="sidebar-menu">
+            <li>
+                <a href="views/fonds/listeFonds.html" class="active">
+                    <div class="menu-text">
+                        <svg class="menu-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        FONDS ACTUELS
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="views/prets/listePrets.html">
+                    <div class="menu-text">
+                        <svg class="menu-icon" viewBox="0 0 24 24">
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                        </svg>
+                          PRET
+                    </div>
+                </a>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" onclick="toggleDropdown(this)">
+                    <div class="menu-text">
+                        <svg class="menu-icon" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                        </svg>
+                        STATISTIQUES
+                    </div>
+                    <span class="dropdown-arrow">▼</span>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="interet.html">
+                        <svg class="menu-icon" viewBox="0 0 24 24">
+                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                        </svg>
+                        INTERET
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="content-area">
+            <div class="image-placeholder">
+                <div>
+                    <div>Zone pour votre image</div>
+                    <div style="font-size: 14px; color: #999; margin-top: 10px;">
+                        Remplacez cette zone par votre image
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Currency Rates Footer -->
+    <div class="currency-rates">
+        <div style="font-weight: bold;">COURS DE DEVISES</div>
+        <div class="rates-info">
+            <div class="rate-item">
+                <div class="currency">EURO</div>
+                <div class="value">5 044,10</div>
+            </div>
+            <div class="rate-item">
+                <div class="currency">USD</div>
+                <div class="value">4 464,77</div>
+            </div>
+            <div style="font-size: 12px; color: #4db6ac;">
+                DATE DU 2025-04-30
+            </div>
+        </div>
+        <button class="find-agency">
+            TROUVER UNE AGENCE 
+        </button>
+    </div>
+
+    <script>
+        function toggleDropdown(element) {
+            const dropdown = element.parentElement;
+            dropdown.classList.toggle('open');
+        }
+
+        // Fermer le dropdown si on clique ailleurs
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('open');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
 
   <h1>Gestion des étudiants</h1>
-  <a href="views/prets/listePrets.html">listePrets</a>
-  <a href="views/prets/formPrets.html">Ajouter Prets</a>
-  <a href="views/fonds/insertionFonds.html">Ajouter Fonds</a>
-  <a href="views/fonds/listeFonds.html">Montant Fonds</a>
-
-  <div>
-    <input type="hidden" id="id">
-    <input type="text" id="nom" placeholder="Nom">
-    <input type="text" id="prenom" placeholder="Prénom">
-    <input type="email" id="email" placeholder="Email">
-    <input type="number" id="age" placeholder="Âge">
-    <button onclick="ajouterOuModifier()">Ajouter / Modifier</button>
-  </div>
-
-  <table id="table-etudiants">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Email</th>
-        <th>Âge</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
   <a href="views/fonds/insertionFonds.html">Ajouter fonds</a>
   <a href="views/fonds/listeFonds.html">Voir le fond actuel</a>
+  <a href="views/prets/formPrets.html">Ajouter prets</a>
+  <a href="views/prets/listePrets.html">Liste pret</a>
 
-  <script>
-    const apiBase = "http://localhost/s4-final/ws";
-
-    function ajax(method, url, data, callback) {
-      const xhr = new XMLHttpRequest();
-      xhr.open(method, apiBase + url, true);
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          callback(JSON.parse(xhr.responseText));
-        }
-      };
-      xhr.send(data);
-    }
-
-    function chargerEtudiants() {
-      ajax("GET", "/etudiants", null, (data) => {
-        const tbody = document.querySelector("#table-etudiants tbody");
-        tbody.innerHTML = "";
-        data.forEach(e => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${e.id}</td>
-            <td>${e.nom}</td>
-            <td>${e.prenom}</td>
-            <td>${e.email}</td>
-            <td>${e.age}</td>
-            <td>
-              <button onclick='remplirFormulaire(${JSON.stringify(e)})'>✏️</button>
-              <button onclick='supprimerEtudiant(${e.id})'>🗑️</button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
-      });
-    }
-
-    function ajouterOuModifier() {
-      const id = document.getElementById("id").value;
-      const nom = document.getElementById("nom").value;
-      const prenom = document.getElementById("prenom").value;
-      const email = document.getElementById("email").value;
-      const age = document.getElementById("age").value;
-
-      const data = `nom=${encodeURIComponent(nom)}&prenom=${encodeURIComponent(prenom)}&email=${encodeURIComponent(email)}&age=${age}`;
-
-      if (id) {
-        ajax("PUT", `/etudiants/${id}`, data, () => {
-          resetForm();
-          chargerEtudiants();
-        });
-      } else {
-        ajax("POST", "/etudiants", data, () => {
-          resetForm();
-          chargerEtudiants();
-        });
-      }
-    }
-
-    function remplirFormulaire(e) {
-      document.getElementById("id").value = e.id;
-      document.getElementById("nom").value = e.nom;
-      document.getElementById("prenom").value = e.prenom;
-      document.getElementById("email").value = e.email;
-      document.getElementById("age").value = e.age;
-    }
-
-    function supprimerEtudiant(id) {
-      if (confirm("Supprimer cet étudiant ?")) {
-        ajax("DELETE", `/etudiants/${id}`, null, () => {
-          chargerEtudiants();
-        });
-      }
-    }
-
-    function resetForm() {
-      document.getElementById("id").value = "";
-      document.getElementById("nom").value = "";
-      document.getElementById("prenom").value = "";
-      document.getElementById("email").value = "";
-      document.getElementById("age").value = "";
-    }
-
-    chargerEtudiants();
-  </script>
-
-</body>
-
-</html>
