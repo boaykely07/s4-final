@@ -94,7 +94,7 @@ class PretsController {
     public static function valider($id) {
         $db = getDB();
         // Trouver le statut 'Approuvé'
-        $stmt = $db->prepare("SELECT id_status_prets FROM Status_prets WHERE nom_status = 'Approuvé' LIMIT 1");
+        $stmt = $db->prepare("SELECT id_status_prets FROM Status_prets WHERE nom_status = 'Approuve' LIMIT 1");
         $stmt->execute();
         $row = $stmt->fetch();
         $id_status_prets = $row ? $row['id_status_prets'] : 2;
@@ -112,7 +112,7 @@ class PretsController {
     public static function annuler($id) {
         $db = getDB();
         // Trouver le statut 'Rejeté'
-        $stmt = $db->prepare("SELECT id_status_prets FROM Status_prets WHERE nom_status = 'Rejeté' LIMIT 1");
+        $stmt = $db->prepare("SELECT id_status_prets FROM Status_prets WHERE nom_status = 'Rejete' LIMIT 1");
         $stmt->execute();
         $row = $stmt->fetch();
         $id_status_prets = $row ? $row['id_status_prets'] : 3;

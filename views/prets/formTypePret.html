@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Type de Prêt - BNI Madagascar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f766e 0%, #059669 50%, #10b981 100%);
+        }
+
+        .sidebar-gradient {
+            background: linear-gradient(180deg, #0f766e 0%, #134e4a 100%);
+        }
+
+        .floating-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen">
+    <!-- Sidebar -->
+    <div class="fixed top-20 left-0 w-72 h-full sidebar-gradient shadow-2xl z-20 hidden lg:block">
+        <div class="p-6 space-y-2">
+            <a href="listeTypesPret.html"
+                class="menu-item flex items-center space-x-4 p-4 rounded-xl text-white bg-white bg-opacity-10 group">
+                <div
+                    class="w-10 h-10 bg-white bg-opacity-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-20 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14.5v-5h2l-3-4-3 4h2v5h2z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-semibold">TYPES DE PRÊT</div>
+                    <div class="text-sm text-teal-100 opacity-75">Gestion des types</div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="lg:ml-72 mt-20 min-h-screen">
+        <div class="p-6 lg:p-8">
+            <div class="floating-card rounded-2xl shadow-2xl mb-8 overflow-hidden max-w-md mx-auto">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 p-8">
+                    <div class="text-white">
+                        <h1 class="text-4xl font-bold mb-2">Ajouter un Type de Prêt</h1>
+                        <p class="text-xl text-teal-100">Saisissez le nom et le taux associé</p>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <form id="typePretForm" class="space-y-6">
+                        <div>
+                            <label for="nom_type_pret" class="block text-gray-700 font-semibold mb-2">Nom du type de
+                                prêt</label>
+                            <input type="text" id="nom_type_pret" name="nom_type_pret"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800"
+                                required>
+                        </div>
+                        <div>
+                            <label for="pourcentage" class="block text-gray-700 font-semibold mb-2">Taux (%)</label>
+                            <input type="number" step="0.01" id="pourcentage" name="pourcentage"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800"
+                                required>
+                        </div>
+                        <div class="flex gap-4">
+                            <button type="submit"
+                                class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover-scale transition-all duration-300">Ajouter</button>
+                            <a href="listeTypesPret.html"
+                                class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-6 py-3 rounded-lg text-center transition-all duration-300">Retour
+                                à la liste</a>
+                        </div>
+                    </form>
+                    <div id="message" class="mt-6"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../config.js"></script>
+    <script>
+        document.getElementById('typePretForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const nom = document.getElementById('nom_type_pret').value;
+            const pourcentage = document.getElementById('pourcentage').value;
+            // 1. Créer le type de prêt
+            fetch(`${API_BASE}/typespret`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nom_type_pret: nom })
+            })
+                .then(res => res.json())
+                .then(res => {
+                    // 2. Créer le taux associé
+                    fetch(`${API_BASE}/taux`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id_types_pret: res.id, pourcentage })
+                    })
+                        .then(() => {
+                            document.getElementById('message').innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded">Type de prêt et taux ajoutés avec succès !</div>';
+                            setTimeout(() => { window.location = 'listeTypesPret.html'; }, 1200);
+                        });
+                })
+                .catch(() => {
+                    document.getElementById('message').innerHTML = '<div class="bg-red-100 text-red-800 px-4 py-2 rounded">Erreur lors de l\'ajout.</div>';
+                });
+        });
+    </script>
+</body>
+
+</html>

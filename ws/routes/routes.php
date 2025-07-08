@@ -26,8 +26,9 @@ Flight::route('POST /prets', ['PretsController', 'create']);
 Flight::route('PUT /prets/@id', ['PretsController', 'update']);
 Flight::route('DELETE /prets/@id', ['PretsController', 'delete']);
 
-// Types de prêt (pour listes déroulantes)
+// Types de prêt (pour listes déroulantes et ajout)
 Flight::route('GET /typespret', ['TypesPretController', 'getAll']);
+Flight::route('POST /typespret', ['TypesPretController', 'create']);
 
 // Taux (pour listes déroulantes)
 Flight::route('GET /taux', ['TauxController', 'getAll']);
