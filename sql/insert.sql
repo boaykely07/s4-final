@@ -9,7 +9,7 @@ INSERT INTO Status_prets (nom_status) VALUES
 ('En attente'),
 ('Approuve'),
 ('Rejete'),
-('Remboursé');
+('Rembourse');
 
 -- Types de transactions
 INSERT INTO Type_transactions (nom_type_transactions) VALUES
