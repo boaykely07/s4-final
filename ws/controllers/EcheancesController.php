@@ -45,11 +45,12 @@ class EcheancesController {
             $taux = $row ? floatval($row['pourcentage']) : 0.0;
         }
         $montant = floatval($pret['montant_prets']);
-        $n = intval($pret['duree_en_mois']);
+        $delai = isset($pret['delai_premier_remboursement']) ? intval($pret['delai_premier_remboursement']) : 0;
+        $n = intval($pret['duree_en_mois']) - $delai;
+        if ($n < 1) $n = 1;
         $r = $taux / 12 / 100; // taux mensuel
         $assurance = isset($pret['pourcentage_assurance']) ? floatval($pret['pourcentage_assurance']) : 0.0;
         $assurance_mensuelle = $montant * $assurance / 100;
-        $delai = isset($pret['delai_premier_remboursement']) ? intval($pret['delai_premier_remboursement']) : 0;
         $date_debut = $pret['date_debut'];
         // Calcul de l'annuité constante
         $A = ($r > 0) ? ($montant * ($r * pow(1 + $r, $n)) / (pow(1 + $r, $n) - 1)) : ($montant / $n);

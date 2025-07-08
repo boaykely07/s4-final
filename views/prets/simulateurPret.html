@@ -377,8 +377,8 @@
             const idType = document.getElementById('typePret').value;
             const taux = parseFloat(tauxByType[idType] || 0);
             const duree = parseInt(document.getElementById('duree').value);
-            const assurance = parseFloat(document.getElementById('assurance').value) || 0;
             const delai = parseInt(document.getElementById('delai').value) || 0;
+            const assurance = parseFloat(document.getElementById('assurance').value) || 0;
             fetch(`${API_BASE}/simulateurpret`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
